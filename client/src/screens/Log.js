@@ -18,7 +18,6 @@ import {
     pure_white,
     white,
 } from "../../assets/colors";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import SearchBar from "../components/SearchBar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StarRating from "../components/StarRating";
@@ -26,8 +25,10 @@ import Line from "../components/Line";
 import ProfilePicture from "../components/ProfilePicture";
 import * as ImagePicker from "expo-image-picker";
 import CustomButton from "../components/CustomButton";
+import BackButton from "../components/BackButton";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
-const Log = () => {
+const Log = ({ navigation }) => {
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -43,6 +44,9 @@ const Log = () => {
 
     return (
         <SafeAreaView style={styles.mainContainer}>
+            <View style={styles.backContainer}>
+                <BackButton navigation={navigation} marginLeft={30} />
+            </View>
             <View style={styles.subContainer}>
                 <View style={styles.topRowContainer}>
                     <ProfilePicture width={80} height={80} />
@@ -62,12 +66,12 @@ const Log = () => {
                     <TouchableOpacity
                         onPress={pickImage}
                         style={styles.buttonStyle}>
-                        <Icon
-                            style={styles.iconStyle}
+                        <FontAwesome5
                             name="camera"
-                            type="evilicon"
-                            color={gray}
+                            color={white}
                             size={50}
+                            solid
+                            style={{ marginBottom: 10 }}
                         />
                         <Text style={styles.gray_text}>
                             Please upload or take a picture
@@ -97,6 +101,10 @@ const styles = StyleSheet.create({
         height: "100%",
         backgroundColor: background,
         flex: 1,
+    },
+    backContainer: {
+        marginLeft: 20,
+        marginBottom: 10,
     },
     white: {
         color: pure_white,

@@ -232,6 +232,11 @@ const TabScreen = () => {
                     component={Setting}
                     options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                    name="Log"
+                    component={Log}
+                    options={{ headerShown: false }}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );
