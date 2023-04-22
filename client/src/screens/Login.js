@@ -75,28 +75,29 @@ const Login = ({ navigation }) => {
                     <TouchableOpacity
                         style={styles.mainButton}
                         onPress={() => {
-                            fetch(
-                                "https://e1fe-131-179-60-246.ngrok.io/login",
-                                {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify(userData),
-                                }
-                            )
-                                .then((response) => response.json())
-                                .then((data) => {
-                                    console.log(data);
-                                    setUserData({
-                                        password: "",
-                                        username: "",
-                                    });
-                                    // navigation.navigate("Tab");
-                                })
-                                .catch((error) => {
-                                    console.error(error);
-                                });
+                            navigation.navigate("Tab");
+                            // fetch(
+                            //     "https://e1fe-131-179-60-246.ngrok.io/login",
+                            //     {
+                            //         method: "POST",
+                            //         headers: {
+                            //             "Content-Type": "application/json",
+                            //         },
+                            //         body: JSON.stringify(userData),
+                            //     }
+                            // )
+                            //     .then((response) => response.json())
+                            //     .then((data) => {
+                            //         console.log(data);
+                            //         setUserData({
+                            //             password: "",
+                            //             username: "",
+                            //         });
+                            //         navigation.navigate("Tab");
+                            //     })
+                            //     .catch((error) => {
+                            //         console.error(error);
+                            //     });
                         }}>
                         <Text style={styles.mainButtonText}>Log in</Text>
                     </TouchableOpacity>

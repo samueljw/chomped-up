@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
     TextInput,
+    Alert,
 } from "react-native";
 import axios from "axios";
 import { Image } from "react-native-elements";
@@ -21,11 +22,11 @@ import CustomInput from "../components/CustomInput";
 import { useState } from "react";
 
 const Register = ({ navigation }) => {
+    // user
     const [userData, setUserData] = useState({
         email: "",
         password: "",
         username: "",
-        bio: "",
     });
 
     const updateEmail = (newEmail) => {
@@ -48,6 +49,34 @@ const Register = ({ navigation }) => {
             password: newPassword,
         });
     };
+
+    // //error toggle
+    // const [error, setError] = useState({
+    //     email: false,
+    //     password: false,
+    //     username: false,
+    // });
+
+    // const updateErrorEmail = (newErrorEmail) => {
+    //     setError({
+    //         ...error,
+    //         email: newErrorEmail,
+    //     });
+    // };
+
+    // //error text
+    // const [errorText, setErrorText] = useState({
+    //     email: "",
+    //     password: "",
+    //     username: "",
+    // });
+
+    // const updateErrorEmailText = (newErrorEmailText) => {
+    //     setErrorText({
+    //         ...errorText,
+    //         email: newErrorEmailText,
+    //     });
+    // };
 
     return (
         <View style={styles.outerWrapper}>
@@ -86,33 +115,51 @@ const Register = ({ navigation }) => {
                         data={userData.password}
                         setData={updatePassword}
                         text="Password"
+                        password={true}
                     />
                     <TouchableOpacity
                         style={styles.mainButton}
-                        onPress={() => {
-                            fetch(
-                                "https://e1fe-131-179-60-246.ngrok.io/register",
-                                {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify(userData),
-                                }
-                            )
-                                .then((response) => response.json())
-                                .then((data) => {
+                        onPress={async () => {
+                            try {
+                                const response = await fetch(
+                                    "https://7ce0-169-232-83-79.ngrok.io/register",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(userData),
+                                    }
+                                );
+                                const data = await response.json();
+                                if (data.statusCode !== 201) {
+                                    throw { name: data };
+                                } else {
                                     setUserData({
                                         email: "",
                                         password: "",
                                         username: "",
-                                        bio: "",
                                     });
                                     navigation.navigate("Login");
-                                })
-                                .catch((error) => {
-                                    console.error(error);
+                                }
+                            } catch (error) {
+                                Alert.alert(
+                                    "Alert",
+                                    error.name.error.message,
+                                    [
+                                        {
+                                            text: "Close Alert",
+                                            onPress: () =>
+                                                console.log("OK Pressed"),
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
+                                setUserData({
+                                    ...userData,
+                                    password: "",
                                 });
+                            }
                         }}>
                         <Text style={styles.mainButtonText}>Register</Text>
                     </TouchableOpacity>

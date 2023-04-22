@@ -27,6 +27,7 @@ import * as ImagePicker from "expo-image-picker";
 import CustomButton from "../components/CustomButton";
 import BackButton from "../components/BackButton";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import StarRatingInput from "../components/StarRatingInput";
 
 const Log = ({ navigation }) => {
     const pickImage = async () => {
@@ -80,7 +81,7 @@ const Log = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.starContainer}>
-                    <StarRating size={30} />
+                    <StarRatingInput size={30} />
                 </View>
                 <View style={styles.inputContainerStyle}>
                     <TextInput style={styles.white} editable multiline />

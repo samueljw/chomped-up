@@ -5,9 +5,17 @@ import {
     input_background,
     primary,
     pure_white,
+    red,
 } from "../../assets/colors";
 
-const CustomInput = ({ text = "Input", data, setData, password }) => {
+const CustomInput = ({
+    text = "Input",
+    data,
+    setData,
+    password,
+    toggleError,
+    errorText,
+}) => {
     const [isFocused, setIsFocused] = useState(false);
 
     const handleFocus = () => {
@@ -19,7 +27,7 @@ const CustomInput = ({ text = "Input", data, setData, password }) => {
     };
 
     return (
-        <>
+        <View>
             <Text style={styles.inputTitle}>{text}</Text>
             <View
                 style={[
@@ -27,17 +35,21 @@ const CustomInput = ({ text = "Input", data, setData, password }) => {
                     isFocused ? styles.inputFocused : null,
                 ]}>
                 <TextInput
+                    secureTextEntry={password ? true : false}
                     value={data}
                     onChangeText={(text) => setData(text)}
                     style={styles.input}
-                    editable
-                    multiline
                     autoCapitalize="none"
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                 />
             </View>
-        </>
+            {/* {toggleError ? (
+                <Text style={styles.errorStyle}>{errorText}</Text>
+            ) : (
+                <></>
+            )} */}
+        </View>
     );
 };
 
@@ -49,14 +61,12 @@ const styles = StyleSheet.create({
     inputContainerStyle: {
         width: "100%",
         fontSize: 16,
-        paddingTop: 7,
-        paddingBottom: 10,
+        paddingVertical: 10,
         paddingHorizontal: 15,
         backgroundColor: input_background,
         borderRadius: 5,
         color: pure_white,
         borderRadius: 10,
-        height: 40,
         borderWidth: 1,
     },
     inputFocused: {
@@ -64,6 +74,12 @@ const styles = StyleSheet.create({
     },
     input: {
         color: pure_white,
+    },
+    errorStyle: {
+        position: "absolute",
+        color: red,
+        bottom: -13,
+        fontSize: 10,
     },
 });
 
