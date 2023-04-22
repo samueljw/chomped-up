@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import StarRating from "../components/StarRating";
 import Line from "../components/Line";
 import ProfilePicture from "../components/ProfilePicture";
+import BackButton from "../components/BackButton";
 
 const persons = [
     {
@@ -40,11 +41,14 @@ const persons = [
     },
 ];
 
-const Entry = () => {
+const Entry = ({ navigation }) => {
     return (
         <>
             <SafeAreaView style={styles.mainContainer}>
                 <ScrollView>
+                    <View style={styles.backContainer}>
+                        <BackButton navigation={navigation} marginLeft={30} />
+                    </View>
                     <View style={styles.subContainer}>
                         <View style={styles.topRowContainer}>
                             <ProfilePicture width={80} height={80} />
@@ -123,6 +127,10 @@ const styles = StyleSheet.create({
         height: "100%",
         backgroundColor: background,
         flex: 1,
+    },
+    backContainer: {
+        marginLeft: 20,
+        marginBottom: 10,
     },
     flexRow: {
         flexDirection: "row",

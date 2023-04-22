@@ -17,8 +17,29 @@ import {
 } from "../../assets/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomInput from "../components/CustomInput";
+import { useState } from "react";
 
 const Login = ({ navigation }) => {
+    const [userData, setUserData] = useState({
+        email: "",
+        password: "",
+        username: "",
+    });
+
+    const updateUserName = (newUserName) => {
+        setUserData({
+            ...userData,
+            username: newUserName,
+        });
+    };
+
+    const updatePassword = (newPassword) => {
+        setUserData({
+            ...userData,
+            password: newPassword,
+        });
+    };
+
     return (
         <View style={styles.outerWrapper}>
             <View style={styles.backdropWrapper}>
@@ -41,12 +62,41 @@ const Login = ({ navigation }) => {
                             {` Back!`}
                         </Text>
                     </Text>
-                    <CustomInput text="Email" />
-                    <CustomInput text="Password" />
+                    <CustomInput
+                        text="Username"
+                        data={userData.username}
+                        setData={updateUserName}
+                    />
+                    <CustomInput
+                        text="Password"
+                        data={userData.password}
+                        setData={updatePassword}
+                    />
                     <TouchableOpacity
                         style={styles.mainButton}
                         onPress={() => {
-                            navigation.navigate("Tab");
+                            fetch(
+                                "https://e1fe-131-179-60-246.ngrok.io/login",
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(userData),
+                                }
+                            )
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    console.log(data);
+                                    setUserData({
+                                        password: "",
+                                        username: "",
+                                    });
+                                    // navigation.navigate("Tab");
+                                })
+                                .catch((error) => {
+                                    console.error(error);
+                                });
                         }}>
                         <Text style={styles.mainButtonText}>Log in</Text>
                     </TouchableOpacity>

@@ -7,7 +7,7 @@ import {
     pure_white,
 } from "../../assets/colors";
 
-const CustomInput = ({ text = "Input" }) => {
+const CustomInput = ({ text = "Input", data, setData, password }) => {
     const [isFocused, setIsFocused] = useState(false);
 
     const handleFocus = () => {
@@ -27,9 +27,12 @@ const CustomInput = ({ text = "Input" }) => {
                     isFocused ? styles.inputFocused : null,
                 ]}>
                 <TextInput
+                    value={data}
+                    onChangeText={(text) => setData(text)}
                     style={styles.input}
                     editable
                     multiline
+                    autoCapitalize="none"
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                 />

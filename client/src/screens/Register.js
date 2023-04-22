@@ -7,6 +7,7 @@ import {
     ScrollView,
     TextInput,
 } from "react-native";
+import axios from "axios";
 import { Image } from "react-native-elements";
 import {
     pure_white,
@@ -17,8 +18,37 @@ import {
 } from "../../assets/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomInput from "../components/CustomInput";
+import { useState } from "react";
 
 const Register = ({ navigation }) => {
+    const [userData, setUserData] = useState({
+        email: "",
+        password: "",
+        username: "",
+        bio: "",
+    });
+
+    const updateEmail = (newEmail) => {
+        setUserData({
+            ...userData,
+            email: newEmail,
+        });
+    };
+
+    const updateUserName = (newUserName) => {
+        setUserData({
+            ...userData,
+            username: newUserName,
+        });
+    };
+
+    const updatePassword = (newPassword) => {
+        setUserData({
+            ...userData,
+            password: newPassword,
+        });
+    };
+
     return (
         <View style={styles.outerWrapper}>
             <View style={styles.backdropWrapper}>
@@ -42,13 +72,47 @@ const Register = ({ navigation }) => {
                         </Text>{" "}
                         Start!
                     </Text>
-                    <CustomInput text="Email" />
-                    <CustomInput text="Username" />
-                    <CustomInput text="Password" />
+                    <CustomInput
+                        data={userData.email}
+                        setData={updateEmail}
+                        text="Email"
+                    />
+                    <CustomInput
+                        data={userData.username}
+                        setData={updateUserName}
+                        text="Username"
+                    />
+                    <CustomInput
+                        data={userData.password}
+                        setData={updatePassword}
+                        text="Password"
+                    />
                     <TouchableOpacity
                         style={styles.mainButton}
                         onPress={() => {
-                            navigation.navigate("Tab");
+                            fetch(
+                                "https://e1fe-131-179-60-246.ngrok.io/register",
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(userData),
+                                }
+                            )
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    setUserData({
+                                        email: "",
+                                        password: "",
+                                        username: "",
+                                        bio: "",
+                                    });
+                                    navigation.navigate("Login");
+                                })
+                                .catch((error) => {
+                                    console.error(error);
+                                });
                         }}>
                         <Text style={styles.mainButtonText}>Register</Text>
                     </TouchableOpacity>
