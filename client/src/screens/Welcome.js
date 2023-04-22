@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Welcome = ({ navigation }) => {
     const [url, setUrl] = useState('');
     const value = useContext(FirebaseStorageContext);
-    const listRef = ref(value, 'images/IMG_0335.JPG');
+    const listRef = ref(value, 'images');
 
     useEffect(() => {
         getDownloadURL(listRef).then((res) => {

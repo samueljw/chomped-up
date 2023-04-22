@@ -1,12 +1,5 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    ScrollView,
-} from "react-native";
-import { Image } from "react-native-elements";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { Image } from 'react-native-elements';
 import {
     background,
     black,
@@ -15,23 +8,23 @@ import {
     primary,
     pure_white,
     white,
-} from "../../assets/colors";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import StarRating from "../components/StarRating";
-import ProfilePicture from "../components/ProfilePicture";
+} from '../../assets/colors';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import StarRating from '../components/StarRating';
+import ProfilePicture from '../components/ProfilePicture';
 
 const dummy_data = [
     {
-        id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-        title: "First Item",
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+        title: 'First Item',
     },
     {
-        id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-        title: "Second Item",
+        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+        title: 'Second Item',
     },
     {
-        id: "58694a0f-3da1-471f-bd96-145571e29d72",
-        title: "Third Item",
+        id: '58694a0f-3da1-471f-bd96-145571e29d72',
+        title: 'Third Item',
     },
 ];
 
@@ -39,52 +32,47 @@ const Item = ({ title, navigation }) => (
     <View style={styles.restaurantContainer}>
         <TouchableOpacity
             onPress={() => {
-                navigation.navigate("Restaurant");
+                navigation.navigate('Restaurant');
             }}
-            style={styles.restaurant}>
-            <Text style={styles.white}>Republique</Text>
+            style={styles.restaurant}
+        >
+            <Text style={{ ...styles.restaurantTitle, ...styles.white }}>Republique</Text>
             <View style={styles.topRowContainer}>
-                <Text style={styles.light_gray}>
+                <Text style={{ ...styles.light_gray, ...styles.location }}>
                     Los Angeles, Westwood • April 18
                 </Text>
                 <View style={styles.ratingContainer}>
-                    <Icon
-                        name="grade"
-                        type="evilicon"
-                        color={primary}
-                        size={20}
-                    />
+                    <FontAwesome5 name="star" color={primary} size={12} solid />
                     <Text style={styles.ratingText}>4.8</Text>
                 </View>
             </View>
         </TouchableOpacity>
         <View style={{ width: 400, height: 300 }}>
-            <Image
-                source={require("../../assets/download.jpeg")}
-                style={styles.image}
-            />
+            <Image source={require('../../assets/download.jpeg')} style={styles.image} />
         </View>
         <View style={styles.bottomContainer}>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("Profile");
+                    navigation.navigate('Profile');
                 }}
-                style={styles.accountContainer}>
+                style={styles.accountContainer}
+            >
                 <ProfilePicture />
                 <View style={styles.nameContainer}>
                     <View>
                         <Text style={styles.white}>Hello</Text>
-                        <StarRating />
+                        <StarRating style={styles.ratingBar} />
                     </View>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("Entry");
-                }}>
+                    navigation.navigate('Entry');
+                }}
+            >
                 <Text style={styles.white}>
-                    Yo mama fat Yo mama fat Yo mama fat Yo mama fat Yo mama fat
-                    Yo mama fat Yo mama fat
+                    Yo mama fat Yo mama fat Yo mama fat Yo mama fat Yo mama fat Yo mama fat Yo mama
+                    fat
                 </Text>
                 <Text style={styles.comment}>Add a comment...</Text>
             </TouchableOpacity>
@@ -98,9 +86,7 @@ const Feed = ({ navigation }) => {
             <View style={styles.subContainer}>
                 <FlatList
                     data={dummy_data}
-                    renderItem={({ item }) => (
-                        <Item title={item.title} navigation={navigation} />
-                    )}
+                    renderItem={({ item }) => <Item title={item.title} navigation={navigation} />}
                     keyExtractor={(item) => item.id}
                 />
             </View>
@@ -110,8 +96,8 @@ const Feed = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: background,
         flex: 1,
     },
@@ -136,14 +122,22 @@ const styles = StyleSheet.create({
     restaurant: {
         padding: 15,
     },
+    restaurantTitle: {
+        fontFamily: 'Lora_700Bold',
+        fontSize: 22,
+    },
+    location: {
+        fontSize: 12,
+        marginTop: 5,
+    },
     topRowContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     ratingText: {
         marginLeft: 5,
@@ -152,21 +146,18 @@ const styles = StyleSheet.create({
     image: {
         width: 400,
         height: 300,
-        resizeMode: "cover",
+        resizeMode: 'cover',
     },
     bottomContainer: {
         margin: 20,
     },
     accountContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 10,
     },
-    starContainer: {
-        flexDirection: "row",
-    },
-    star: {
-        flexDirection: "row",
+    ratingBar: {
+        marginTop: 5,
     },
     nameContainer: {
         marginLeft: 15,

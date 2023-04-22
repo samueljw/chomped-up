@@ -15,7 +15,6 @@ import Entry from "./Entry";
 import Register from "./Register";
 import Login from "./Login";
 import Restaurant from "./Restaurant";
-import { Image } from "react-native-elements";
 import Friends from "./Friends";
 import Setting from "./Setting";
 import BackButton from "../components/BackButton";

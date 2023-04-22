@@ -1,6 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { gray, gray_text } from "../../assets/colors";
+import { input_background, gray_text } from "../../assets/colors";
 
 const IconButton = ({ icon_name, screen, navigation }) => {
     return (
@@ -11,7 +11,7 @@ const IconButton = ({ icon_name, screen, navigation }) => {
             style={{
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: gray,
+                backgroundColor: input_background,
                 width: 30,
                 height: 30,
                 borderRadius: 10,
