@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
     TextInput,
+    Alert,
 } from "react-native";
 import { Image } from "react-native-elements";
 import {
@@ -18,10 +19,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomInput from "../components/CustomInput";
 import { useState } from "react";
+import { storeData } from "../api/storage";
 
 const Login = ({ navigation }) => {
     const [userData, setUserData] = useState({
-        email: "",
         password: "",
         username: "",
     });
@@ -74,30 +75,46 @@ const Login = ({ navigation }) => {
                     />
                     <TouchableOpacity
                         style={styles.mainButton}
-                        onPress={() => {
-                            navigation.navigate("Tab");
-                            // fetch(
-                            //     "https://e1fe-131-179-60-246.ngrok.io/login",
-                            //     {
-                            //         method: "POST",
-                            //         headers: {
-                            //             "Content-Type": "application/json",
-                            //         },
-                            //         body: JSON.stringify(userData),
-                            //     }
-                            // )
-                            //     .then((response) => response.json())
-                            //     .then((data) => {
-                            //         console.log(data);
-                            //         setUserData({
-                            //             password: "",
-                            //             username: "",
-                            //         });
-                            //         navigation.navigate("Tab");
-                            //     })
-                            //     .catch((error) => {
-                            //         console.error(error);
-                            //     });
+                        onPress={async () => {
+                            try {
+                                const response = await fetch(
+                                    "https://7ce0-169-232-83-79.ngrok.io/login",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(userData),
+                                    }
+                                );
+                                const data = await response.json();
+                                if (data.statusCode !== 200) {
+                                    throw { name: data };
+                                } else {
+                                    setUserData({
+                                        password: "",
+                                        username: "",
+                                    });
+                                    navigation.navigate("Tab");
+                                }
+                            } catch (error) {
+                                Alert.alert(
+                                    "Alert",
+                                    error.name.error.message,
+                                    [
+                                        {
+                                            text: "Close Alert",
+                                            onPress: () =>
+                                                console.log("OK Pressed"),
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
+                                setUserData({
+                                    ...userData,
+                                    password: "",
+                                });
+                            }
                         }}>
                         <Text style={styles.mainButtonText}>Log in</Text>
                     </TouchableOpacity>

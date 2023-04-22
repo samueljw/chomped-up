@@ -132,7 +132,7 @@ const Register = ({ navigation }) => {
                                     }
                                 );
                                 const data = await response.json();
-                                if (data.statusCode !== 201) {
+                                if (data.statusCode !== 200) {
                                     throw { name: data };
                                 } else {
                                     setUserData({
