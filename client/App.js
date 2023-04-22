@@ -8,7 +8,7 @@ import {
     STORAGE_BUCKET,
     MESSAGING_SENDER_ID,
     APP_ID,
-} from '@env';
+} from "@env";
 
 import UserContext from './src/contexts/UserContext';
 import FirebaseStorageContext from './src/contexts/FireStorageContext';
