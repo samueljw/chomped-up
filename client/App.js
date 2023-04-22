@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getStorage } from 'firebase/storage';
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 import {
     API_KEY,
     AUTH_DOMAIN,
@@ -7,12 +7,12 @@ import {
     STORAGE_BUCKET,
     MESSAGING_SENDER_ID,
     APP_ID,
-} from '@env';
+} from "@env";
 
-import UserContext from './src/contexts/UserContext';
-import FirebaseStorageContext from './src/contexts/FireStorageContext';
-import TabScreen from './src/screens/TabScreens';
-import FontWrapper from './src/utils/FontWrapper';
+import UserContext from "./src/contexts/UserContext";
+import FirebaseStorageContext from "./src/contexts/FireStorageContext";
+import TabScreen from "./src/screens/TabScreens";
+import FontWrapper from "./src/utils/FontWrapper";
 
 const firebaseConfig = {
     apiKey: API_KEY,
@@ -27,10 +27,8 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 export default function App() {
-    const value = 'hello';
-
     return (
-        <UserContext.Provider value={value}>
+        <UserContext.Provider>
             <FirebaseStorageContext.Provider value={storage}>
                 <FontWrapper>
                     <TabScreen></TabScreen>
