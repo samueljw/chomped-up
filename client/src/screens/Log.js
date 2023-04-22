@@ -38,6 +38,7 @@ const Log = ({ navigation }) => {
     const [imageUri, setImageUri] = useState("");
     const [uploading, setUploading] = useState(false);
     const fireStorage = useContext(FirebaseStorageContext);
+    const [rating, setRating] = useState(0);
 
     useEffect(async () => {
         if (Platform.OS !== "web") {
@@ -143,7 +144,7 @@ const Log = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.starContainer}>
-                    <StarRatingInput size={30} />
+                    <StarRatingInput rating={rating} setRating={setRating} />
                 </View>
                 <View style={styles.inputContainerStyle}>
                     <TextInput style={styles.white} editable multiline />
