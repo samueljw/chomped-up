@@ -5,48 +5,40 @@ import {
     FlatList,
     TouchableOpacity,
     ScrollView,
-} from "react-native";
-import { Image } from "react-native-elements";
-import {
-    background,
-    gray_text,
-    light_gray,
-    primary,
-    pure_white,
-    white,
-} from "../../assets/colors";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import SearchBar from "../components/SearchBar";
-import { SafeAreaView } from "react-native-safe-area-context";
-import StarRating from "../components/StarRating";
-import Line from "../components/Line";
-import ProfilePicture from "../components/ProfilePicture";
+    ImageBackground,
+} from 'react-native';
+import { Image } from 'react-native-elements';
+import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { background, gray_text, light_gray, primary, pure_white, white } from '../../assets/colors';
+import StarRating from '../components/StarRating';
+import Line from '../components/Line';
+import ProfilePicture from '../components/ProfilePicture';
 
 const dummy_data = [
     {
-        id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-        title: "First Item",
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+        title: 'First Item',
     },
     {
-        id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-        title: "Second Item",
+        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+        title: 'Second Item',
     },
     {
-        id: "58694a0f-3da1-471f-bd96-145571e29d72",
-        title: "Third Item",
+        id: '58694a0f-3da1-471f-bd96-145571e29d72',
+        title: 'Third Item',
     },
 ];
 
 const Item = ({ navigation }) => (
     <TouchableOpacity
         onPress={() => {
-            navigation.navigate("Restaurant");
+            navigation.navigate('Restaurant');
         }}
-        style={styles.restaurantContainer}>
-        <Image
-            source={require("../../assets/download.jpeg")}
-            style={styles.image}
-        />
+        style={styles.restaurantContainer}
+    >
+        <Image source={require('../../assets/download.jpeg')} style={styles.image} />
         <View style={styles.imageText}>
             <Text>Sun Nong Dan</Text>
             <StarRating />
@@ -65,11 +57,10 @@ const Profile = ({ navigation }) => {
                     </View>
                     <View style={styles.topRowText}>
                         <Text style={styles.text}>
-                            <Text style={styles.bold}>15 </Text>mutual friends
+                            <Text style={styles.bold}>15 </Text> friends
                         </Text>
                         <Text style={styles.text}>
-                            <Text style={styles.bold}>32 </Text>restaurant
-                            entries
+                            <Text style={styles.bold}>32 </Text> restaurant entries
                         </Text>
                     </View>
                     <View style={styles.topRowText}>
@@ -88,9 +79,29 @@ const Profile = ({ navigation }) => {
             <Line />
             <ScrollView>
                 <View style={styles.subContainer}>
-                    <Text style={styles.heading}>
-                        Recent restaurant entries
-                    </Text>
+                    <Text style={styles.heading}>Current craving</Text>
+                    <ImageBackground
+                        source={require('../../assets/download.jpeg')}
+                        style={styles.cravingImage}
+                        imageStyle={{ borderRadius: 20 }}
+                    >
+                        <LinearGradient
+                            colors={['transparent', 'rgba(0, 0, 0, 0.9)']}
+                            style={{
+                                position: 'absolute',
+                                left: 0,
+                                bottom: 0,
+                                width: '100%',
+                                height: '100%',
+                                borderBottomLeftRadius: 20,
+                                borderBottomRightRadius: 20,
+                            }}
+                        />
+                        <Text style={{ ...styles.cravingRestaurant, ...styles.white }}>Bestia</Text>
+                    </ImageBackground>
+                </View>
+                <View style={styles.subContainer}>
+                    <Text style={styles.heading}>Recent restaurant entries</Text>
                     <FlatList
                         horizontal
                         data={dummy_data}
@@ -111,6 +122,7 @@ const Profile = ({ navigation }) => {
                         keyExtractor={(item) => item.id}
                     />
                 </View>
+                <View style={{ width: '100%', height: 150 }} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -118,10 +130,11 @@ const Profile = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: background,
         flex: 1,
+        paddingHorizontal: 15,
     },
     white: {
         color: pure_white,
@@ -135,36 +148,35 @@ const styles = StyleSheet.create({
     heading: {
         color: pure_white,
         fontSize: 20,
-        marginLeft: 15,
-        marginBottom: 15,
+        fontFamily: 'Lora_600SemiBold',
+        marginBottom: 10,
     },
     subContainer: {
         marginTop: 30,
     },
     restaurantContainer: {
-        marginLeft: 15,
+        marginRight: 15,
     },
     restaurant: {
         padding: 15,
     },
     topRowContainer: {
-        flexDirection: "row",
-        marginLeft: 20,
+        flexDirection: 'row',
         marginBottom: 20,
     },
     topRowName: {
         marginBottom: 12,
     },
     topRowText: {
-        flexDirection: "row",
+        flexDirection: 'row',
         marginBottom: 8,
     },
     bold: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
     },
     ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     ratingText: {
         marginLeft: 5,
@@ -173,34 +185,34 @@ const styles = StyleSheet.create({
     image: {
         width: 142,
         height: 200,
-        resizeMode: "cover",
+        resizeMode: 'cover',
         borderRadius: 20,
     },
     profileImage: {
         width: 45,
         height: 45,
         borderRadius: 999,
-        resizeMode: "cover",
+        resizeMode: 'cover',
     },
     bottomContainer: {
         margin: 20,
     },
     accountContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 15,
     },
     starContainer: {
-        flexDirection: "row",
+        flexDirection: 'row',
     },
     star: {
-        flexDirection: "row",
+        flexDirection: 'row',
     },
     comment: {
         marginTop: 5,
     },
     imageText: {
-        position: "absolute",
+        position: 'absolute',
         margin: 10,
         bottom: 0,
     },
@@ -214,6 +226,18 @@ const styles = StyleSheet.create({
     text: {
         color: pure_white,
         marginRight: 15,
+    },
+    cravingImage: {
+        width: '100%',
+        height: 100,
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingLeft: 15,
+        paddingBottom: 15,
+    },
+    cravingRestaurant: {
+        fontSize: 22,
+        fontFamily: 'Lora_600SemiBold',
     },
 });
 
