@@ -15,6 +15,7 @@ import { background, gray_text, light_gray, primary, pure_white, white } from '.
 import StarRating from '../components/StarRating';
 import Line from '../components/Line';
 import ProfilePicture from '../components/ProfilePicture';
+import Overlay from '../components/Overlay';
 
 const dummy_data = [
     {
@@ -39,9 +40,10 @@ const Item = ({ navigation }) => (
         style={styles.restaurantContainer}
     >
         <Image source={require('../../assets/download.jpeg')} style={styles.image} />
+        <Overlay bottom={true} borderRadius={20} alpha={0.7} />
         <View style={styles.imageText}>
-            <Text>Sun Nong Dan</Text>
-            <StarRating />
+            <Text style={{ ...styles.itemText, ...styles.white }}>Sun Nong Dan</Text>
+            <StarRating size={10} style={{ marginVertical: 5 }} />
         </View>
     </TouchableOpacity>
 );
@@ -85,18 +87,7 @@ const Profile = ({ navigation }) => {
                         style={styles.cravingImage}
                         imageStyle={{ borderRadius: 20 }}
                     >
-                        <LinearGradient
-                            colors={['transparent', 'rgba(0, 0, 0, 0.9)']}
-                            style={{
-                                position: 'absolute',
-                                left: 0,
-                                bottom: 0,
-                                width: '100%',
-                                height: '100%',
-                                borderBottomLeftRadius: 20,
-                                borderBottomRightRadius: 20,
-                            }}
-                        />
+                        <Overlay bottom={true} borderRadius={20} alpha={0.9} />
                         <Text style={{ ...styles.cravingRestaurant, ...styles.white }}>Bestia</Text>
                     </ImageBackground>
                 </View>
@@ -156,6 +147,8 @@ const styles = StyleSheet.create({
     },
     restaurantContainer: {
         marginRight: 15,
+        width: 142,
+        height: 200,
     },
     restaurant: {
         padding: 15,
@@ -183,8 +176,8 @@ const styles = StyleSheet.create({
         color: pure_white,
     },
     image: {
-        width: 142,
-        height: 200,
+        width: '100%',
+        height: '100%',
         resizeMode: 'cover',
         borderRadius: 20,
     },
@@ -238,6 +231,10 @@ const styles = StyleSheet.create({
     cravingRestaurant: {
         fontSize: 22,
         fontFamily: 'Lora_600SemiBold',
+    },
+    itemText: {
+        fontFamily: 'Lora_600SemiBold',
+        fontSize: 16,
     },
 });
 
