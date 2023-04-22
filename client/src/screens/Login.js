@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
     TextInput,
+    Alert,
 } from "react-native";
 import { Image } from "react-native-elements";
 import {
@@ -17,8 +18,29 @@ import {
 } from "../../assets/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomInput from "../components/CustomInput";
+import { useState } from "react";
+import { storeData } from "../api/storage";
 
 const Login = ({ navigation }) => {
+    const [userData, setUserData] = useState({
+        password: "",
+        username: "",
+    });
+
+    const updateUserName = (newUserName) => {
+        setUserData({
+            ...userData,
+            username: newUserName,
+        });
+    };
+
+    const updatePassword = (newPassword) => {
+        setUserData({
+            ...userData,
+            password: newPassword,
+        });
+    };
+
     return (
         <View style={styles.outerWrapper}>
             <View style={styles.backdropWrapper}>
@@ -41,12 +63,58 @@ const Login = ({ navigation }) => {
                             {` Back!`}
                         </Text>
                     </Text>
-                    <CustomInput text="Email" />
-                    <CustomInput text="Password" />
+                    <CustomInput
+                        text="Username"
+                        data={userData.username}
+                        setData={updateUserName}
+                    />
+                    <CustomInput
+                        text="Password"
+                        data={userData.password}
+                        setData={updatePassword}
+                    />
                     <TouchableOpacity
                         style={styles.mainButton}
-                        onPress={() => {
-                            navigation.navigate("Tab");
+                        onPress={async () => {
+                            try {
+                                const response = await fetch(
+                                    "https://7ce0-169-232-83-79.ngrok.io/login",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(userData),
+                                    }
+                                );
+                                const data = await response.json();
+                                if (data.statusCode !== 200) {
+                                    throw { name: data };
+                                } else {
+                                    setUserData({
+                                        password: "",
+                                        username: "",
+                                    });
+                                    navigation.navigate("Tab");
+                                }
+                            } catch (error) {
+                                Alert.alert(
+                                    "Alert",
+                                    error.name.error.message,
+                                    [
+                                        {
+                                            text: "Close Alert",
+                                            onPress: () =>
+                                                console.log("OK Pressed"),
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
+                                setUserData({
+                                    ...userData,
+                                    password: "",
+                                });
+                            }
                         }}>
                         <Text style={styles.mainButtonText}>Log in</Text>
                     </TouchableOpacity>

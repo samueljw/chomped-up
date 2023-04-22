@@ -6,7 +6,9 @@ import {
     TouchableOpacity,
     ScrollView,
     TextInput,
+    Alert,
 } from "react-native";
+import axios from "axios";
 import { Image } from "react-native-elements";
 import {
     pure_white,
@@ -17,8 +19,65 @@ import {
 } from "../../assets/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomInput from "../components/CustomInput";
+import { useState } from "react";
 
 const Register = ({ navigation }) => {
+    // user
+    const [userData, setUserData] = useState({
+        email: "",
+        password: "",
+        username: "",
+    });
+
+    const updateEmail = (newEmail) => {
+        setUserData({
+            ...userData,
+            email: newEmail,
+        });
+    };
+
+    const updateUserName = (newUserName) => {
+        setUserData({
+            ...userData,
+            username: newUserName,
+        });
+    };
+
+    const updatePassword = (newPassword) => {
+        setUserData({
+            ...userData,
+            password: newPassword,
+        });
+    };
+
+    // //error toggle
+    // const [error, setError] = useState({
+    //     email: false,
+    //     password: false,
+    //     username: false,
+    // });
+
+    // const updateErrorEmail = (newErrorEmail) => {
+    //     setError({
+    //         ...error,
+    //         email: newErrorEmail,
+    //     });
+    // };
+
+    // //error text
+    // const [errorText, setErrorText] = useState({
+    //     email: "",
+    //     password: "",
+    //     username: "",
+    // });
+
+    // const updateErrorEmailText = (newErrorEmailText) => {
+    //     setErrorText({
+    //         ...errorText,
+    //         email: newErrorEmailText,
+    //     });
+    // };
+
     return (
         <View style={styles.outerWrapper}>
             <View style={styles.backdropWrapper}>
@@ -42,13 +101,65 @@ const Register = ({ navigation }) => {
                         </Text>{" "}
                         Start!
                     </Text>
-                    <CustomInput text="Email" />
-                    <CustomInput text="Username" />
-                    <CustomInput text="Password" />
+                    <CustomInput
+                        data={userData.email}
+                        setData={updateEmail}
+                        text="Email"
+                    />
+                    <CustomInput
+                        data={userData.username}
+                        setData={updateUserName}
+                        text="Username"
+                    />
+                    <CustomInput
+                        data={userData.password}
+                        setData={updatePassword}
+                        text="Password"
+                        password={true}
+                    />
                     <TouchableOpacity
                         style={styles.mainButton}
-                        onPress={() => {
-                            navigation.navigate("Tab");
+                        onPress={async () => {
+                            try {
+                                const response = await fetch(
+                                    "https://7ce0-169-232-83-79.ngrok.io/register",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(userData),
+                                    }
+                                );
+                                const data = await response.json();
+                                if (data.statusCode !== 200) {
+                                    throw { name: data };
+                                } else {
+                                    setUserData({
+                                        email: "",
+                                        password: "",
+                                        username: "",
+                                    });
+                                    navigation.navigate("Login");
+                                }
+                            } catch (error) {
+                                Alert.alert(
+                                    "Alert",
+                                    error.name.error.message,
+                                    [
+                                        {
+                                            text: "Close Alert",
+                                            onPress: () =>
+                                                console.log("OK Pressed"),
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
+                                setUserData({
+                                    ...userData,
+                                    password: "",
+                                });
+                            }
                         }}>
                         <Text style={styles.mainButtonText}>Register</Text>
                     </TouchableOpacity>

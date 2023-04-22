@@ -1,6 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import Stars from "react-native-stars";
 import { white } from "../../assets/colors";
 
 const StarRatingInput = ({ size = 12, rating = 5, style }) => {
@@ -8,20 +9,23 @@ const StarRatingInput = ({ size = 12, rating = 5, style }) => {
     const fullStars = halfStar ? rating - 0.5 : rating;
 
     return (
-        <View style={{ ...styles.star, ...style }}>
-            {[...Array(fullStars).keys()].map(() => {
-                return (
-                    <FontAwesome5 name="star" color={white} size={size} solid />
-                );
-            })}
-            {halfStar && (
-                <FontAwesome5
-                    name="star-half"
-                    color={white}
-                    size={size}
-                    solid
-                />
-            )}
+        <View style={{ alignItems: "center" }}>
+            <Stars
+                default={2.5}
+                count={5}
+                half={true}
+                starSize={50}
+                fullStar={<Icon name={"star"} style={[styles.myStarStyle]} />}
+                emptyStar={
+                    <Icon
+                        name={"star-outline"}
+                        style={[styles.myStarStyle, styles.myEmptyStarStyle]}
+                    />
+                }
+                halfStar={
+                    <Icon name={"star-half"} style={[styles.myStarStyle]} />
+                }
+            />
         </View>
     );
 };

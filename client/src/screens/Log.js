@@ -24,14 +24,19 @@ import {
     primary,
     pure_white,
     white,
-} from '../../assets/colors';
-import SearchBar from '../components/SearchBar';
-import StarRating from '../components/StarRating';
-import Line from '../components/Line';
-import ProfilePicture from '../components/ProfilePicture';
-import CustomButton from '../components/CustomButton';
-import BackButton from '../components/BackButton';
+} from "../../assets/colors";
+import SearchBar from "../components/SearchBar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StarRating from "../components/StarRating";
+import Line from "../components/Line";
+import ProfilePicture from "../components/ProfilePicture";
+import * as ImagePicker from "expo-image-picker";
+import CustomButton from "../components/CustomButton";
+import BackButton from "../components/BackButton";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import StarRatingInput from "../components/StarRatingInput";
 import FirebaseStorageContext from '../contexts/FireStorageContext';
+
 
 const Log = ({ navigation }) => {
     const [imageUri, setImageUri] = useState('');
@@ -133,7 +138,7 @@ const Log = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.starContainer}>
-                    <StarRating size={30} />
+                    <StarRatingInput size={30} />
                 </View>
                 <View style={styles.inputContainerStyle}>
                     <TextInput style={styles.white} editable multiline />
