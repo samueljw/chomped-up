@@ -6,8 +6,15 @@ import {
     TouchableOpacity,
     ScrollView,
     TextInput,
-} from "react-native";
-import { Button, Image, Input } from "react-native-elements";
+} from 'react-native';
+import { useState, useContext, useEffect } from 'react';
+import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import 'react-native-get-random-values';
+import { v4 } from 'uuid';
+
 import {
     background,
     black,
@@ -17,18 +24,33 @@ import {
     primary,
     pure_white,
     white,
-} from "../../assets/colors";
-import SearchBar from "../components/SearchBar";
-import { SafeAreaView } from "react-native-safe-area-context";
-import StarRating from "../components/StarRating";
-import Line from "../components/Line";
-import ProfilePicture from "../components/ProfilePicture";
-import * as ImagePicker from "expo-image-picker";
-import CustomButton from "../components/CustomButton";
-import BackButton from "../components/BackButton";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+} from '../../assets/colors';
+import SearchBar from '../components/SearchBar';
+import StarRating from '../components/StarRating';
+import Line from '../components/Line';
+import ProfilePicture from '../components/ProfilePicture';
+import CustomButton from '../components/CustomButton';
+import BackButton from '../components/BackButton';
+import FirebaseStorageContext from '../contexts/FireStorageContext';
 
 const Log = ({ navigation }) => {
+    const [imageUri, setImageUri] = useState('');
+    const [uploading, setUploading] = useState(false);
+    const fireStorage = useContext(FirebaseStorageContext);
+
+    useEffect(async () => {
+        if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log('IMAGE URI', imageUri);
+    }, [imageUri]);
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -37,9 +59,46 @@ const Log = ({ navigation }) => {
             quality: 1,
         });
 
-        if (!result.cancelled) {
-            setImageUri(result.uri);
+        handleImagePicked(result);
+    };
+
+    const handleImagePicked = async (pickerResult) => {
+        try {
+            setUploading(true);
+
+            if (!pickerResult.cancelled) {
+                const uploadUrl = await uploadImageAsync(pickerResult.uri);
+                setImageUri(uploadUrl);
+            }
+        } catch (e) {
+            console.log(e);
+            alert('Upload failed, sorry :(');
+        } finally {
+            setUploading(false);
         }
+    };
+
+    const uploadImageAsync = async (uri) => {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function (e) {
+                console.log(e);
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', uri, true);
+            xhr.send(null);
+        });
+        const uuId = v4();
+        const fileRef = ref(getStorage(), uuId);
+        const result = await uploadBytes(fileRef, blob);
+
+        blob.close();
+
+        return await getDownloadURL(fileRef);
     };
 
     return (
@@ -58,24 +117,18 @@ const Log = ({ navigation }) => {
                 </View>
                 <View style={styles.textContainer}>
                     <Text style={styles.restaurantName}>Republique</Text>
-                    <Text style={styles.light_gray}>
-                        Los Angeles, Westwood • April 18
-                    </Text>
+                    <Text style={styles.light_gray}>Los Angeles, Westwood • April 18</Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        onPress={pickImage}
-                        style={styles.buttonStyle}>
+                    <TouchableOpacity onPress={pickImage} style={styles.buttonStyle}>
                         <FontAwesome5
                             name="camera"
-                            color={white}
+                            color={gray}
                             size={50}
                             solid
                             style={{ marginBottom: 10 }}
                         />
-                        <Text style={styles.gray_text}>
-                            Please upload or take a picture
-                        </Text>
+                        <Text style={styles.gray_text}>Please upload or take a picture</Text>
                         <Text style={styles.gray_text}>of the good stuff</Text>
                     </TouchableOpacity>
                 </View>
@@ -85,11 +138,7 @@ const Log = ({ navigation }) => {
                 <View style={styles.inputContainerStyle}>
                     <TextInput style={styles.white} editable multiline />
                 </View>
-                <CustomButton
-                    text="Log Entry"
-                    text_color={gray_text}
-                    button_color={gray}
-                />
+                <CustomButton text="Log Entry" text_color={gray_text} button_color={gray} />
             </View>
         </SafeAreaView>
     );
@@ -97,8 +146,8 @@ const Log = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: background,
         flex: 1,
     },
@@ -119,9 +168,9 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     buttonStyle: {
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
         height: 260,
         borderRadius: 20,
         borderWidth: 1,
@@ -140,19 +189,19 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     topRowContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 20,
     },
     topRowName: {
         marginBottom: 12,
     },
     topRowText: {
-        flexDirection: "row",
+        flexDirection: 'row',
         marginBottom: 8,
     },
     bold: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
     },
     light_gray: {
         color: light_gray,
@@ -171,8 +220,8 @@ const styles = StyleSheet.create({
         height: 120,
     },
     ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     ratingText: {
         marginLeft: 5,
@@ -181,24 +230,24 @@ const styles = StyleSheet.create({
     image: {
         width: 142,
         height: 200,
-        resizeMode: "cover",
+        resizeMode: 'cover',
         borderRadius: 20,
     },
     profileImage: {
         width: 45,
         height: 45,
         borderRadius: 999,
-        resizeMode: "cover",
+        resizeMode: 'cover',
     },
     bottomContainer: {
         margin: 20,
     },
     accountContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 15,
     },
-    starContainer: { margin: 20, alignSelf: "center" },
+    starContainer: { margin: 20, alignSelf: 'center' },
     nameContainer: {
         marginLeft: 20,
     },
@@ -213,7 +262,7 @@ const styles = StyleSheet.create({
     restaurantName: {
         color: pure_white,
         fontSize: 22,
-        fontWeight: "700",
+        fontWeight: '700',
         marginBottom: 5,
     },
     iconStyle: {
