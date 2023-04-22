@@ -1,0 +1,13 @@
+export const black = "#010400";
+export const white = "#FFFBFC";
+export const pure_white = "#FFFFFF";
+export const primary = "#EBFF33";
+export const gray_text = "#616161";
+export const gray = "#353535";
+export const light_gray = "#A3A3A3";
+export const background = "#171716";
+export const icon_unselected = "#353535";
+export const line_color = "#3D3D3D";
+export const bright_yellow = "#EBFF33";
+export const input_background = "#1B1B1B";
+export const red = "#F93B3B";
