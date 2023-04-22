@@ -10,6 +10,9 @@ import {
 } from "react-native";
 import axios from "axios";
 import { Image } from "react-native-elements";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import {
     pure_white,
     bright_yellow,
@@ -17,7 +20,6 @@ import {
     gray,
     gray_text,
 } from "../../assets/colors";
-import { SafeAreaView } from "react-native-safe-area-context";
 import CustomInput from "../components/CustomInput";
 import { useState } from "react";
 

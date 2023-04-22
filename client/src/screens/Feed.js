@@ -15,13 +15,32 @@ import {
     primary,
     pure_white,
     white,
-} from "../../assets/colors";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import StarRating from "../components/StarRating";
-import ProfilePicture from "../components/ProfilePicture";
-import { getData } from "../api/storage";
+} from '../../assets/colors';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import StarRating from '../components/StarRating';
+import ProfilePicture from '../components/ProfilePicture';
+import CravingItem from '../components/CravingItem';
 
-const dummy_data = [
+const craving_data = [
+    {
+        id: '1',
+        restaurant: 'Kazunori',
+    },
+    {
+        id: '2',
+        restaurant: 'Gogobop',
+    },
+    {
+        id: '3',
+        restaurant: 'Cava',
+    },
+    {
+        id: '4',
+        restaurant: 'Dennys',
+    },
+];
+
+const list_data = [
     {
         id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
         title: "First Item",
@@ -35,9 +54,6 @@ const dummy_data = [
         title: "Third Item",
     },
 ];
-
-console.log(getData());
-console.log("hello");
 
 const Item = ({ title, navigation }) => (
     <View style={styles.restaurantContainer}>
@@ -96,15 +112,24 @@ const Item = ({ title, navigation }) => (
 const Feed = ({ navigation }) => {
     return (
         <View style={styles.mainContainer}>
-            <View style={styles.subContainer}>
+            <ScrollView style={styles.subContainer}>
+                <Text style={{ ...styles.cravingText, ...styles.white }}>
+                    What your friends have been craving
+                </Text>
                 <FlatList
-                    data={dummy_data}
-                    renderItem={({ item }) => (
-                        <Item title={item.title} navigation={navigation} />
-                    )}
+                    data={craving_data}
+                    renderItem={({ item }) => <CravingItem restaurant={item.restaurant} />}
+                    keyExtractor={(item) => item.id}
+                    horizontal={true}
+                    style={styles.cravingContainer}
+                />
+                <FlatList
+                    data={list_data}
+                    renderItem={({ item }) => <Item title={item.title} navigation={navigation} />}
                     keyExtractor={(item) => item.id}
                 />
-            </View>
+                <View style={{ width: '100%', height: 150 }} />
+            </ScrollView>
         </View>
     );
 };
@@ -180,6 +205,15 @@ const styles = StyleSheet.create({
     comment: {
         marginTop: 5,
         color: gray_text,
+    },
+    cravingText: {
+        fontFamily: 'Lora_600SemiBold',
+        fontSize: 18,
+        marginTop: 20,
+    },
+    cravingContainer: {
+        marginTop: 15,
+        height: 180,
     },
 });
 
