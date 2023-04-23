@@ -1,12 +1,5 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    ScrollView,
-} from "react-native";
-import { Image } from "react-native-elements";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { Image } from 'react-native-elements';
 import {
     background,
     black,
@@ -15,47 +8,47 @@ import {
     primary,
     pure_white,
     white,
-} from "../../assets/colors";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import StarRating from "../components/StarRating";
-import ProfilePicture from "../components/ProfilePicture";
-import CravingItem from "../components/CravingItem";
-import { useContext, useEffect, useState } from "react";
-import { link } from "../api/link";
-import UserContext from "../contexts/UserContext";
-import { convertDate } from "../components/Helper";
+} from '../../assets/colors';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import StarRating from '../components/StarRating';
+import ProfilePicture from '../components/ProfilePicture';
+import CravingItem from '../components/CravingItem';
+import { useContext, useEffect, useState } from 'react';
+import { link } from '../api/link';
+import UserContext from '../contexts/UserContext';
+import { convertDate } from '../components/Helper';
 
 const craving_data = [
     {
-        id: "1",
-        restaurant: "Kazunori",
+        id: '1',
+        restaurant: 'Kazunori',
     },
     {
-        id: "2",
-        restaurant: "Gogobop",
+        id: '2',
+        restaurant: 'Gogobop',
     },
     {
-        id: "3",
-        restaurant: "Cava",
+        id: '3',
+        restaurant: 'Cava',
     },
     {
-        id: "4",
-        restaurant: "Dennys",
+        id: '4',
+        restaurant: 'Dennys',
     },
 ];
 
 const list_data = [
     {
-        id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-        title: "First Item",
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+        title: 'First Item',
     },
     {
-        id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-        title: "Second Item",
+        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+        title: 'Second Item',
     },
     {
-        id: "58694a0f-3da1-471f-bd96-145571e29d72",
-        title: "Third Item",
+        id: '58694a0f-3da1-471f-bd96-145571e29d72',
+        title: 'Third Item',
     },
 ];
 
@@ -64,9 +57,12 @@ const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
         <View style={styles.restaurantContainer}>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("Restaurant");
+                    navigation.navigate('Restaurant', {
+                        restaurant,
+                    });
                 }}
-                style={styles.restaurant}>
+                style={styles.restaurant}
+            >
                 <Text style={{ ...styles.restaurantTitle, ...styles.white }}>
                     {restaurant?.title}
                 </Text>
@@ -77,17 +73,15 @@ const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
                 </View>
             </TouchableOpacity>
             <View style={{ width: 400, height: 300 }}>
-                <Image
-                    source={require("../../assets/download.jpeg")}
-                    style={styles.image}
-                />
+                <Image source={require('../../assets/download.jpeg')} style={styles.image} />
             </View>
             <View style={styles.bottomContainer}>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Profile");
+                        navigation.navigate('Profile');
                     }}
-                    style={styles.accountContainer}>
+                    style={styles.accountContainer}
+                >
                     <ProfilePicture />
                     <View style={styles.nameContainer}>
                         <View>
@@ -98,14 +92,15 @@ const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Entry", {
+                        navigation.navigate('Entry', {
                             restaurant,
                             user,
                             createdAt,
                             caption,
                             postId,
                         });
-                    }}>
+                    }}
+                >
                     <Text style={styles.white}>{caption}</Text>
                     <Text style={styles.comment}>Add a comment...</Text>
                 </TouchableOpacity>
@@ -118,15 +113,15 @@ const Feed = ({ navigation }) => {
     const contextValue = useContext(UserContext);
     const [friendsPost, setFriendsPost] = useState({});
 
-    console.log("friendspost", friendsPost);
+    console.log('friendspost', friendsPost);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`${link}/getFriendsPosts`, {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                         access_token: contextValue,
                     },
                 });
@@ -151,9 +146,7 @@ const Feed = ({ navigation }) => {
                 </Text>
                 <FlatList
                     data={craving_data}
-                    renderItem={({ item }) => (
-                        <CravingItem restaurant={item.restaurant} />
-                    )}
+                    renderItem={({ item }) => <CravingItem restaurant={item.restaurant} />}
                     keyExtractor={(item) => item.id}
                     horizontal={true}
                     style={styles.cravingContainer}
@@ -173,7 +166,7 @@ const Feed = ({ navigation }) => {
                     )}
                     keyExtractor={(item) => item.id}
                 />
-                <View style={{ width: "100%", height: 150 }} />
+                <View style={{ width: '100%', height: 150 }} />
             </ScrollView>
         </View>
     );
@@ -181,8 +174,8 @@ const Feed = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: background,
         flex: 1,
     },
@@ -208,7 +201,7 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     restaurantTitle: {
-        fontFamily: "Lora_700Bold",
+        fontFamily: 'Lora_700Bold',
         fontSize: 22,
     },
     location: {
@@ -216,13 +209,13 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     topRowContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     ratingText: {
         marginLeft: 5,
@@ -231,14 +224,14 @@ const styles = StyleSheet.create({
     image: {
         width: 400,
         height: 300,
-        resizeMode: "cover",
+        resizeMode: 'cover',
     },
     bottomContainer: {
         margin: 20,
     },
     accountContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 10,
     },
     ratingBar: {
@@ -252,7 +245,7 @@ const styles = StyleSheet.create({
         color: gray_text,
     },
     cravingText: {
-        fontFamily: "Lora_600SemiBold",
+        fontFamily: 'Lora_600SemiBold',
         fontSize: 18,
         marginTop: 20,
     },
