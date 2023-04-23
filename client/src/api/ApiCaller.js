@@ -1,7 +1,7 @@
 import { API_ENDPOINT } from '@env';
 import link from '../api/link';
 
-const baseUrl = link ?? API_ENDPOINT;
+const baseUrl = link;
 
 const ApiCaller = async (path = '', token = '', body) => {
     const fullUrl = `${baseUrl}${path}`;
