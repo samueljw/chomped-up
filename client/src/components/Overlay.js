@@ -1,12 +1,22 @@
 import { View, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const Overlay = ({ bottom, borderRadius }) => {
+const Overlay = ({ bottom, borderRadius, alpha }) => {
     return (
         <LinearGradient
-            colors={['transparent', 'rgba(0, 0, 0, 0.9)']}
+            colors={
+                bottom
+                    ? ['transparent', `rgba(0, 0, 0, ${alpha})`]
+                    : [`rgba(0, 0, 0, ${alpha})`, 'transparent']
+            }
             style={{
-                ...styles.wrapper
+                ...styles.wrapper,
+                ...{
+                    borderBottomLeftRadius: bottom ? borderRadius : 0,
+                    borderBottomRightRadius: bottom ? borderRadius : 0,
+                    borderTopLeftRadius: bottom ? 0 : borderRadius,
+                    borderTopRightRadius: bottom ? 0 : borderRadius,
+                },
             }}
         />
     );

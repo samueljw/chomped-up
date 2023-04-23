@@ -13,11 +13,14 @@ export async function getFromLocal(key) {
 }
 
 export async function setToLocal(key, value) {
-    console.log('KEY VALUE', value);
     try {
         await AsyncStorage.setItem(key, JSON.stringify(value));
         return true;
     } catch (error) {
         return false;
     }
+}
+
+export function clearStorage() {
+    AsyncStorage.clear();
 }
