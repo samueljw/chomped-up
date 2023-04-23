@@ -1,12 +1,5 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    ScrollView,
-} from "react-native";
-import { Image } from "react-native-elements";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { Image } from 'react-native-elements';
 import {
     background,
     black,
@@ -15,24 +8,27 @@ import {
     primary,
     pure_white,
     white,
-} from "../../assets/colors";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import StarRating from "../components/StarRating";
-import ProfilePicture from "../components/ProfilePicture";
-import CravingItem from "../components/CravingItem";
-import { useContext, useEffect, useState } from "react";
-import { link } from "../api/link";
-import UserContext from "../contexts/UserContext";
-import { convertDate } from "../components/Helper";
+} from '../../assets/colors';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import StarRating from '../components/StarRating';
+import ProfilePicture from '../components/ProfilePicture';
+import CravingItem from '../components/CravingItem';
+import { useContext, useEffect, useState } from 'react';
+import { link } from '../api/link';
+import UserContext from '../contexts/UserContext';
+import { convertDate } from '../components/Helper';
 
 const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
     return (
         <View style={styles.restaurantContainer}>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("Restaurant");
+                    navigation.navigate('Restaurant', {
+                        restaurant,
+                    });
                 }}
-                style={styles.restaurant}>
+                style={styles.restaurant}
+            >
                 <Text style={{ ...styles.restaurantTitle, ...styles.white }}>
                     {restaurant?.title}
                 </Text>
@@ -43,17 +39,15 @@ const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
                 </View>
             </TouchableOpacity>
             <View style={{ width: 400, height: 300 }}>
-                <Image
-                    source={require("../../assets/download.jpeg")}
-                    style={styles.image}
-                />
+                <Image source={require('../../assets/download.jpeg')} style={styles.image} />
             </View>
             <View style={styles.bottomContainer}>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Profile");
+                        navigation.navigate('Profile');
                     }}
-                    style={styles.accountContainer}>
+                    style={styles.accountContainer}
+                >
                     <ProfilePicture />
                     <View style={styles.nameContainer}>
                         <View>
@@ -64,14 +58,15 @@ const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Entry", {
+                        navigation.navigate('Entry', {
                             restaurant,
                             user,
                             createdAt,
                             caption,
                             postId,
                         });
-                    }}>
+                    }}
+                >
                     <Text style={styles.white}>{caption}</Text>
                     <Text style={styles.comment}>Add a comment...</Text>
                 </TouchableOpacity>
@@ -114,9 +109,9 @@ const Feed = ({ navigation }) => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`${link}/getFriendsPosts`, {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                         access_token: contextValue,
                     },
                 });
@@ -177,8 +172,8 @@ const Feed = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: background,
         flex: 1,
     },
@@ -203,7 +198,7 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     restaurantTitle: {
-        fontFamily: "Lora_700Bold",
+        fontFamily: 'Lora_700Bold',
         fontSize: 22,
     },
     location: {
@@ -211,13 +206,13 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     topRowContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     ratingText: {
         marginLeft: 5,
@@ -226,14 +221,14 @@ const styles = StyleSheet.create({
     image: {
         width: 400,
         height: 300,
-        resizeMode: "cover",
+        resizeMode: 'cover',
     },
     bottomContainer: {
         margin: 20,
     },
     accountContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 10,
     },
     ratingBar: {
@@ -247,7 +242,7 @@ const styles = StyleSheet.create({
         color: gray_text,
     },
     cravingText: {
-        fontFamily: "Lora_600SemiBold",
+        fontFamily: 'Lora_600SemiBold',
         fontSize: 18,
         marginTop: 20,
     },
