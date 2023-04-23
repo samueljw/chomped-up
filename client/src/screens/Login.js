@@ -7,28 +7,22 @@ import {
     ScrollView,
     TextInput,
     Alert,
-} from "react-native";
-import { useContext } from "react";
-import { Image } from "react-native-elements";
-import {
-    pure_white,
-    bright_yellow,
-    input_background,
-    gray,
-    gray_text,
-} from "../../assets/colors";
-import { SafeAreaView } from "react-native-safe-area-context";
-import CustomInput from "../components/CustomInput";
-import { useState } from "react";
-import { setToLocal, getFromLocal } from "../utils/AsyncStorage";
-import UserContext from "../contexts/UserContext";
-import { link } from "../api/link";
+} from 'react-native';
+import { useContext } from 'react';
+import { Image } from 'react-native-elements';
+import { pure_white, bright_yellow, input_background, gray, gray_text } from '../../assets/colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomInput from '../components/CustomInput';
+import { useState } from 'react';
+import { setToLocal, getFromLocal } from '../utils/AsyncStorage';
+import UserContext from '../contexts/UserContext';
+import { link } from '../api/link';
 
 const Login = ({ navigation }) => {
     const token = useContext(UserContext);
     const [userData, setUserData] = useState({
-        password: "",
-        username: "",
+        password: '',
+        username: '',
     });
 
     const updateUserName = (newUserName) => {
@@ -50,7 +44,7 @@ const Login = ({ navigation }) => {
             <View style={styles.backdropWrapper}>
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require("../../assets/login-bg.png")}
+                        source={require('../../assets/login-bg.png')}
                         style={styles.backdropImage}
                     />
                 </View>
@@ -63,7 +57,8 @@ const Login = ({ navigation }) => {
                             style={{
                                 ...styles.yellow,
                                 ...styles.welcomeTitleSpan,
-                            }}>
+                            }}
+                        >
                             {` Back!`}
                         </Text>
                     </Text>
@@ -76,15 +71,16 @@ const Login = ({ navigation }) => {
                         text="Password"
                         data={userData.password}
                         setData={updatePassword}
+                        password
                     />
                     <TouchableOpacity
                         style={styles.mainButton}
                         onPress={async () => {
                             try {
                                 const response = await fetch(`${link}/login`, {
-                                    method: "POST",
+                                    method: 'POST',
                                     headers: {
-                                        "Content-Type": "application/json",
+                                        'Content-Type': 'application/json',
                                     },
                                     body: JSON.stringify(userData),
                                 });
@@ -93,32 +89,32 @@ const Login = ({ navigation }) => {
                                 if (data.statusCode !== 200) {
                                     throw { name: data };
                                 } else {
-                                    setToLocal("TOKEN", data.data.accessToken);
+                                    setToLocal('TOKEN', data.data.accessToken);
                                     setUserData({
-                                        password: "",
-                                        username: "",
+                                        password: '',
+                                        username: '',
                                     });
-                                    navigation.navigate("Tab");
+                                    navigation.navigate('Tab');
                                 }
                             } catch (error) {
                                 Alert.alert(
-                                    "Alert",
+                                    'Alert',
                                     error.name.error.message,
                                     [
                                         {
-                                            text: "Close Alert",
-                                            onPress: () =>
-                                                console.log("OK Pressed"),
+                                            text: 'Close Alert',
+                                            onPress: () => console.log('OK Pressed'),
                                         },
                                     ],
                                     { cancelable: false }
                                 );
                                 setUserData({
                                     ...userData,
-                                    password: "",
+                                    password: '',
                                 });
                             }
-                        }}>
+                        }}
+                    >
                         <Text style={styles.mainButtonText}>Log in</Text>
                     </TouchableOpacity>
                     <View style={styles.loginContainer}>
@@ -126,18 +122,21 @@ const Login = ({ navigation }) => {
                             style={{
                                 ...styles.loginText,
                                 ...styles.white,
-                            }}>
+                            }}
+                        >
                             {`First time here? `}
                         </Text>
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate("Register");
-                            }}>
+                                navigation.navigate('Register');
+                            }}
+                        >
                             <Text
                                 style={{
                                     ...styles.loginButton,
                                     ...styles.yellow,
-                                }}>
+                                }}
+                            >
                                 Register your account
                             </Text>
                         </TouchableOpacity>
@@ -145,8 +144,9 @@ const Login = ({ navigation }) => {
                             style={{
                                 ...styles.loginText,
                                 ...styles.white,
-                            }}>
-                            {" "}
+                            }}
+                        >
+                            {' '}
                             here
                         </Text>
                     </View>
@@ -158,13 +158,13 @@ const Login = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     outerWrapper: {
-        width: "100%",
+        width: '100%',
         flex: 1,
     },
     mainContainer: {
-        width: "100%",
-        height: "100%",
-        backgroundColor: "#000000",
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#000000',
         flex: 1,
     },
     white: {
@@ -180,64 +180,64 @@ const styles = StyleSheet.create({
         top: -125,
     },
     backdropWrapper: {
-        position: "relative",
-        width: "100%",
+        position: 'relative',
+        width: '100%',
         height: 590,
     },
     imageContainer: {
-        height: "100%",
-        width: "100%",
-        position: "absolute",
+        height: '100%',
+        width: '100%',
+        position: 'absolute',
         top: 0,
         left: 0,
     },
     backdropImage: {
-        width: "100%",
-        height: "100%",
-        resizeMode: "cover",
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
     },
     welcomeTitle: {
-        fontFamily: "Lora_500Medium",
+        fontFamily: 'Lora_500Medium',
         fontSize: 36,
-        textAlign: "center",
+        textAlign: 'center',
     },
     welcomeTitleSpan: {
-        fontFamily: "Lora_600SemiBold",
+        fontFamily: 'Lora_600SemiBold',
     },
     taglines: {
-        fontFamily: "Inter_400Regular",
+        fontFamily: 'Inter_400Regular',
         fontSize: 14,
-        textAlign: "center",
+        textAlign: 'center',
         lineHeight: 24,
         marginTop: 30,
     },
     mainButton: {
         backgroundColor: bright_yellow,
-        width: "100%",
+        width: '100%',
         height: 50,
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: 15,
         marginTop: 30,
     },
     mainButtonText: {
-        fontFamily: "Lora_700Bold",
+        fontFamily: 'Lora_700Bold',
         fontSize: 18,
     },
     loginText: {
-        fontFamily: "Lora_400Regular",
+        fontFamily: 'Lora_400Regular',
         fontSize: 14,
         marginTop: 15,
     },
     loginButton: {
-        fontFamily: "Lora_600SemiBold",
-        textDecorationLine: "underline",
+        fontFamily: 'Lora_600SemiBold',
+        textDecorationLine: 'underline',
         marginTop: 15,
     },
     loginContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 

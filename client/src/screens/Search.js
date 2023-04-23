@@ -174,8 +174,8 @@ const Search = ({ navigation }) => {
             }
 
             let location = await Location.getCurrentPositionAsync({});
-            setLatitude(location.coords.latitude);
-            setLongitude(location.coords.longitude);
+            setLatitude(34.073);
+            setLongitude(-118.45);
         })();
     }, []);
 
