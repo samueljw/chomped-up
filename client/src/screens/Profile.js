@@ -20,30 +20,36 @@ import Overlay from '../components/Overlay';
 const dummy_data = [
     {
         id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
+        title: 'Manpuku Japanese BBQ',
+        rating: 4.5,
+        image: 'https://firebasestorage.googleapis.com/v0/b/chomped-up.appspot.com/o/restaurants%2Fmanpuku.jpeg?alt=media&token=560c171d-cc88-4362-a3d1-7962ed305b05',
     },
     {
         id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
+        title: 'Tsujita Artisan Noodles',
+        rating: 2,
+        image: 'https://firebasestorage.googleapis.com/v0/b/chomped-up.appspot.com/o/restaurants%2Ftsujitaartisan.jpg?alt=media&token=338af239-80a5-4ecc-9f29-5284f6c3aeee',
     },
     {
         id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
+        title: 'Sea Salt Poke',
+        rating: 5,
+        image: 'https://firebasestorage.googleapis.com/v0/b/chomped-up.appspot.com/o/restaurants%2Fseasaltpoke.jpeg?alt=media&token=efc28f96-d245-4810-a523-9dcc40221da9',
     },
 ];
 
-const Item = ({ navigation }) => (
+const RestaurantCard = ({ navigation, title, rating, image }) => (
     <TouchableOpacity
         onPress={() => {
             navigation.navigate('Restaurant');
         }}
         style={styles.restaurantContainer}
     >
-        <Image source={require('../../assets/download.jpeg')} style={styles.image} />
+        <Image source={{ uri: image }} style={styles.image} />
         <Overlay bottom={true} borderRadius={20} alpha={0.7} />
         <View style={styles.imageText}>
-            <Text style={{ ...styles.itemText, ...styles.white }}>Sun Nong Dan</Text>
-            <StarRating size={10} style={{ marginVertical: 5 }} />
+            <Text style={{ ...styles.itemText, ...styles.white }}>{title}</Text>
+            {rating && <StarRating size={10} style={{ marginVertical: 5 }} rating={rating} />}
         </View>
     </TouchableOpacity>
 );
@@ -53,7 +59,7 @@ const Profile = ({ navigation }) => {
         <SafeAreaView style={styles.mainContainer}>
             <View style={styles.topRowContainer}>
                 <ProfilePicture width={80} height={80} />
-                <View style={styles.nameContainer}>
+                <View style={styles.bioContainer}>
                     <View style={styles.topRowName}>
                         <Text style={styles.name}>Jane Doe</Text>
                     </View>
@@ -74,7 +80,10 @@ const Profile = ({ navigation }) => {
                         </Text>
                     </View>
                     <View style={styles.topRowText}>
-                        <Text style={styles.light_gray}>Description</Text>
+                        <Text style={styles.light_gray}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam imperdiet,
+                            tellus in mattis fermentum, justo enim posuere ipsum.
+                        </Text>
                     </View>
                 </View>
             </View>
@@ -82,14 +91,24 @@ const Profile = ({ navigation }) => {
             <ScrollView>
                 <View style={styles.subContainer}>
                     <Text style={styles.heading}>Current craving</Text>
-                    <ImageBackground
-                        source={require('../../assets/download.jpeg')}
-                        style={styles.cravingImage}
-                        imageStyle={{ borderRadius: 20 }}
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('Restaurant');
+                        }}
                     >
-                        <Overlay bottom={true} borderRadius={20} alpha={0.9} />
-                        <Text style={{ ...styles.cravingRestaurant, ...styles.white }}>Bestia</Text>
-                    </ImageBackground>
+                        <ImageBackground
+                            source={{
+                                uri: 'https://firebasestorage.googleapis.com/v0/b/chomped-up.appspot.com/o/restaurants%2Ffuraibo.jpeg?alt=media&token=a8bba8bb-8988-4c65-94a0-4663f6e8e30d',
+                            }}
+                            style={styles.cravingImage}
+                            imageStyle={{ borderRadius: 20 }}
+                        >
+                            <Overlay bottom={true} borderRadius={20} alpha={0.9} />
+                            <Text style={{ ...styles.cravingRestaurant, ...styles.white }}>
+                                Furaibo
+                            </Text>
+                        </ImageBackground>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.subContainer}>
                     <Text style={styles.heading}>Recent restaurant entries</Text>
@@ -97,7 +116,12 @@ const Profile = ({ navigation }) => {
                         horizontal
                         data={dummy_data}
                         renderItem={({ item }) => (
-                            <Item title={item.title} navigation={navigation} />
+                            <RestaurantCard
+                                title={item.title}
+                                rating={item.rating}
+                                navigation={navigation}
+                                image={item.image}
+                            />
                         )}
                         keyExtractor={(item) => item.id}
                     />
@@ -108,7 +132,11 @@ const Profile = ({ navigation }) => {
                         horizontal
                         data={dummy_data}
                         renderItem={({ item }) => (
-                            <Item title={item.title} navigation={navigation} />
+                            <RestaurantCard
+                                title={item.title}
+                                navigation={navigation}
+                                image={item.image}
+                            />
                         )}
                         keyExtractor={(item) => item.id}
                     />
@@ -125,7 +153,6 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: background,
         flex: 1,
-        paddingHorizontal: 15,
     },
     white: {
         color: pure_white,
@@ -140,22 +167,22 @@ const styles = StyleSheet.create({
         color: pure_white,
         fontSize: 20,
         fontFamily: 'Lora_600SemiBold',
-        marginBottom: 10,
+        marginBottom: 15,
     },
     subContainer: {
         marginTop: 30,
+        marginLeft: 15,
     },
     restaurantContainer: {
         marginRight: 15,
         width: 142,
         height: 200,
     },
-    restaurant: {
-        padding: 15,
-    },
     topRowContainer: {
         flexDirection: 'row',
         marginBottom: 20,
+        marginHorizontal: 15,
+        width: '100%',
     },
     topRowName: {
         marginBottom: 12,
@@ -209,12 +236,15 @@ const styles = StyleSheet.create({
         margin: 10,
         bottom: 0,
     },
-    nameContainer: {
+    bioContainer: {
         marginLeft: 20,
+        flex: 1,
+        alignItems: 'stretch',
     },
     name: {
         color: pure_white,
-        fontSize: 25,
+        fontSize: 26,
+        fontFamily: 'Lora_600SemiBold',
     },
     text: {
         color: pure_white,
@@ -222,7 +252,7 @@ const styles = StyleSheet.create({
     },
     cravingImage: {
         width: '100%',
-        height: 100,
+        height: 120,
         flex: 1,
         justifyContent: 'flex-end',
         paddingLeft: 15,
@@ -233,7 +263,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Lora_600SemiBold',
     },
     itemText: {
-        fontFamily: 'Lora_600SemiBold',
+        fontFamily: 'Lora_700Bold',
         fontSize: 16,
     },
 });

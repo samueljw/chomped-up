@@ -34,7 +34,7 @@ export default function App() {
         const getTokenFromStorage = async () => {
             const tokenFromStorage = await getFromLocal("TOKEN");
             setToken(tokenFromStorage);
-            console.log("token", tokenFromStorage);
+            console.log("TOKEN", tokenFromStorage);
         };
         getTokenFromStorage();
     }, []);

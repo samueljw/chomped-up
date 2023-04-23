@@ -10,7 +10,6 @@ const Splash = ({ navigation }) => {
     const token = useContext(UserContext);
 
     useEffect(() => {
-        clearStorage();
         setTimeout(() => {
             if (!token) {
                 navigation.navigate('Welcome');
