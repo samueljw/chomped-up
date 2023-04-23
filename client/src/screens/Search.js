@@ -24,30 +24,50 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import * as Location from "expo-location";
 import { link } from "../api/link";
 
-const dummy_data = [
-    {
-        id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-        title: "First Item",
-    },
-    {
-        id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-        title: "Second Item",
-    },
-    {
-        id: "58694a0f-3da1-471f-bd96-145571e29d72",
-        title: "Third Item",
-    },
-];
-
-const Item = ({ navigation, restaurant }) => (
+const NearRestaurant = ({ navigation, restaurant }) => (
     <TouchableOpacity
         // onPress={() => {
         //     navigation.navigate("Restaurant", { restaurant: { id: 1 } });
         // }}
         style={styles.restaurantContainer}>
-        <Image source={{ uri: restaurant?.icon }} style={styles.image} />
+        <Image
+            source={{ uri: restaurant?.["Photo-URL"] }}
+            style={styles.image}
+        />
         <View style={styles.imageText}>
-            <Text style={styles.nameText}>{restaurant?.name}</Text>
+            <Text style={styles.nameText}>{restaurant?.Restaurant}</Text>
+            {/* <Text
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                }}>
+                <FontAwesome5 name="star" color={primary} size={12} solid />
+                <Text
+                    style={{
+                        marginLeft: 10,
+                        fontWeight: "600",
+                        color: pure_white,
+                    }}>
+                    {restaurant?.rating}
+                </Text>
+            </Text> */}
+            {/* <Text style={styles.white}>15 friends ate here</Text> */}
+        </View>
+    </TouchableOpacity>
+);
+
+const RecommendedRestaurant = ({ navigation, restaurant }) => (
+    <TouchableOpacity
+        onPress={() => {
+            navigation.navigate("Restaurant", { restaurant: { id: 1 } });
+        }}
+        style={styles.restaurantContainer}>
+        <Image
+            source={{ uri: restaurant?.Restaurant?.photo }}
+            style={styles.image}
+        />
+        <View style={styles.imageText}>
+            <Text style={styles.nameText}>{restaurant?.Restaurant?.title}</Text>
             <Text
                 style={{
                     flexDirection: "row",
@@ -73,6 +93,7 @@ const Search = ({ navigation }) => {
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
 
+    const [restoNearMe, setRestoNearMe] = useState({});
     const [restoRec, setRestoRec] = useState({});
 
     useEffect(() => {
@@ -107,8 +128,7 @@ const Search = ({ navigation }) => {
                 if (data.statusCode !== 200) {
                     throw { name: data };
                 } else {
-                    setRestoRec(data);
-                    console.log("SUCCESS");
+                    setRestoNearMe(data);
                 }
             } catch (error) {
                 console.log(error);
@@ -117,7 +137,31 @@ const Search = ({ navigation }) => {
         fetchData();
     }, [contextValue, latitude, longitude]);
 
-    console.log(restoRec);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${link}/getRecommendation`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        access_token: contextValue,
+                    },
+                });
+                const data = await response.json();
+                if (data.statusCode !== 200) {
+                    throw { name: data };
+                } else {
+                    setRestoRec(data);
+                    console.log("SUCCESS");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [contextValue]);
+
+    console.log(restoNearMe);
 
     return (
         <View style={styles.mainContainer}>
@@ -126,22 +170,30 @@ const Search = ({ navigation }) => {
                     <SearchBar />
                 </View>
                 <View style={styles.subContainer}>
-                    <Text style={styles.heading}>Restaurants near me</Text>
+                    <Text style={styles.heading}>Get Recommendations</Text>
                     <FlatList
                         horizontal
                         data={restoRec?.data}
                         renderItem={({ item }) => (
-                            <Item navigation={navigation} restaurant={item} />
+                            <RecommendedRestaurant
+                                navigation={navigation}
+                                restaurant={item}
+                            />
                         )}
                         keyExtractor={(item) => item.id}
                     />
                 </View>
                 <View style={styles.subContainer}>
-                    <Text style={styles.heading}>Get Recommendations</Text>
+                    <Text style={styles.heading}>Restaurants near me</Text>
                     <FlatList
                         horizontal
-                        data={dummy_data}
-                        renderItem={({ item }) => <Item title={item.title} />}
+                        data={restoNearMe?.data}
+                        renderItem={({ item }) => (
+                            <NearRestaurant
+                                navigation={navigation}
+                                restaurant={item}
+                            />
+                        )}
                         keyExtractor={(item) => item.id}
                     />
                 </View>
