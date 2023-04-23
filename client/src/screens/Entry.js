@@ -54,7 +54,8 @@ const persons = [
 
 const Entry = ({ navigation, route }) => {
     const contextValue = useContext(UserContext);
-    const { restaurant, user, createdAt, caption, postId } = route.params;
+    const { restaurant, user, createdAt, caption, postId, profilePicture } =
+        route.params;
 
     const [comments, setComments] = useState({});
     const [newComment, setNewComment] = useState("");
@@ -113,7 +114,11 @@ const Entry = ({ navigation, route }) => {
                 <ScrollView>
                     <View style={styles.subContainer}>
                         <View style={styles.topRowContainer}>
-                            <ProfilePicture width={80} height={80} />
+                            <ProfilePicture
+                                source={profilePicture}
+                                width={80}
+                                height={80}
+                            />
                             <View style={styles.nameContainer}>
                                 <View style={styles.topRowName}>
                                     <Text style={styles.name}>

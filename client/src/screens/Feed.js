@@ -32,6 +32,7 @@ const Item = ({
     caption,
     postId,
     id,
+    profilePicture,
 }) => {
     return (
         <View style={styles.restaurantContainer}>
@@ -63,7 +64,7 @@ const Item = ({
                         navigation.navigate("Profile", { id });
                     }}
                     style={styles.accountContainer}>
-                    <ProfilePicture />
+                    <ProfilePicture source={profilePicture} />
                     <View style={styles.nameContainer}>
                         <View>
                             <Text style={styles.white}>{user?.username}</Text>
@@ -79,6 +80,7 @@ const Item = ({
                             createdAt,
                             caption,
                             postId,
+                            profilePicture,
                         });
                     }}>
                     <Text style={styles.white}>{caption}</Text>
@@ -142,6 +144,8 @@ const Feed = ({ navigation }) => {
         fetchData();
     }, [contextValue]);
 
+    console.log(friendsPost?.data);
+
     return (
         <View style={styles.mainContainer}>
             <ScrollView style={styles.subContainer}>
@@ -175,6 +179,7 @@ const Feed = ({ navigation }) => {
                                 caption={item.caption}
                                 postId={item.id}
                                 id={item.id}
+                                profilePicture={item.User.profilePicture}
                             />
                         )}
                         keyExtractor={(item) => item.id}

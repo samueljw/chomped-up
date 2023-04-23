@@ -19,8 +19,10 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import SearchBar from "../components/SearchBar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import UserContext from "../contexts/UserContext";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import * as Location from "expo-location";
+import { link } from "../api/link";
 
 const dummy_data = [
     {
@@ -37,32 +39,86 @@ const dummy_data = [
     },
 ];
 
-const Item = ({ navigation }) => (
+const Item = ({ navigation, restaurant }) => (
     <TouchableOpacity
-        onPress={() => {
-            navigation.navigate("Restaurant", { restaurant: { id: 1 } });
-        }}
+        // onPress={() => {
+        //     navigation.navigate("Restaurant", { restaurant: { id: 1 } });
+        // }}
         style={styles.restaurantContainer}>
-        <Image
-            source={require("../../assets/download.jpeg")}
-            style={styles.image}
-        />
+        <Image source={{ uri: restaurant?.icon }} style={styles.image} />
         <View style={styles.imageText}>
-            <Text style={styles.nameText}>Sun Nong Dan</Text>
+            <Text style={styles.nameText}>{restaurant?.name}</Text>
             <Text
                 style={{
                     flexDirection: "row",
                     alignItems: "center",
                 }}>
                 <FontAwesome5 name="star" color={primary} size={12} solid />
-                <Text style={{ marginLeft: 10, fontWeight: "600" }}>4.3</Text>
+                <Text
+                    style={{
+                        marginLeft: 10,
+                        fontWeight: "600",
+                        color: pure_white,
+                    }}>
+                    {restaurant?.rating}
+                </Text>
             </Text>
-            <Text style={styles.white}>15 friends ate here</Text>
+            {/* <Text style={styles.white}>15 friends ate here</Text> */}
         </View>
     </TouchableOpacity>
 );
 
 const Search = ({ navigation }) => {
+    const contextValue = useContext(UserContext);
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+
+    const [restoRec, setRestoRec] = useState({});
+
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                console.log("Permission to access location was denied");
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLatitude(location.coords.latitude);
+            setLongitude(location.coords.longitude);
+        })();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${link}/getRestoAround`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        access_token: contextValue,
+                    },
+                    body: JSON.stringify({
+                        latitude: latitude,
+                        longitude: longitude,
+                    }),
+                });
+                const data = await response.json();
+                if (data.statusCode !== 200) {
+                    throw { name: data };
+                } else {
+                    setRestoRec(data);
+                    console.log("SUCCESS");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [contextValue, latitude, longitude]);
+
+    console.log(restoRec);
+
     return (
         <View style={styles.mainContainer}>
             <ScrollView>
@@ -70,18 +126,18 @@ const Search = ({ navigation }) => {
                     <SearchBar />
                 </View>
                 <View style={styles.subContainer}>
-                    <Text style={styles.heading}>Popular among friends</Text>
+                    <Text style={styles.heading}>Restaurants near me</Text>
                     <FlatList
                         horizontal
-                        data={dummy_data}
+                        data={restoRec?.data}
                         renderItem={({ item }) => (
-                            <Item title={item.title} navigation={navigation} />
+                            <Item navigation={navigation} restaurant={item} />
                         )}
                         keyExtractor={(item) => item.id}
                     />
                 </View>
                 <View style={styles.subContainer}>
-                    <Text style={styles.heading}>Restaurants near me</Text>
+                    <Text style={styles.heading}>Get Recommendations</Text>
                     <FlatList
                         horizontal
                         data={dummy_data}

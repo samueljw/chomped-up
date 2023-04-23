@@ -125,13 +125,11 @@ const Profile = ({ navigation, route }) => {
         }
     }, [contextValue]);
 
-    console.log("user", user?.data);
-
     return (
         <View style={styles.mainContainer}>
             <View style={styles.topRowContainer}>
                 <ProfilePicture
-                    source={user?.data?.ProfilePicture}
+                    source={user?.data?.profilePicture}
                     width={80}
                     height={80}
                 />
