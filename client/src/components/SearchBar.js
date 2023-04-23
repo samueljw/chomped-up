@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity, Image, Text} from "react-native";
 import {
     background,
     black,
@@ -30,7 +30,7 @@ const SearchBar = () => {
                     },
                 });
             const data = await response.json();
-            setSearchResults(data);
+            setSearchResults(data.data);
         } catch (error) {
             console.error(error);
           }
@@ -64,6 +64,12 @@ const SearchBar = () => {
                     size={23}
                 />
             </TouchableOpacity>
+            {searchResults.map((item, index) => (
+                <View key={index}>
+                    <Image source={{ uri: item.photo }} style={{ width: 200, height: 200 }} />
+                    <Text>{item.title}</Text>
+              </View>
+            ))}   
         </View>
     );
 };
