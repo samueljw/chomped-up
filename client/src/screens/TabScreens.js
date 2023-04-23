@@ -107,11 +107,6 @@ const TabScreen = () => {
                     component={Restaurant}
                     options={backOption}
                 />
-                <Stack.Screen
-                    name="Chat"
-                    component={Chat}
-                    options={backOption}
-                />
             </Stack.Navigator>
         );
     };
@@ -254,6 +249,11 @@ const TabScreen = () => {
                     name="Log"
                     component={Log}
                     options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Chat"
+                    component={Chat}
+                    options={backOption}
                 />
             </Stack.Navigator>
         </NavigationContainer>

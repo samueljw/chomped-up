@@ -35,13 +35,10 @@ const SearchBar = () => {
                 },
             });
             const data = await response.json();
-            console.log(data);
             setSearchResults(data.data);
         } catch (error) {
             console.error(error);
         }
-
-        return <searchResult searchResults={searchResults} />;
     };
 
     const handleIconPress = () => {
