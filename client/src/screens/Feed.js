@@ -15,28 +15,32 @@ import {
     primary,
     pure_white,
     white,
-} from '../../assets/colors';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import StarRating from '../components/StarRating';
-import ProfilePicture from '../components/ProfilePicture';
-import CravingItem from '../components/CravingItem';
+} from "../../assets/colors";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import StarRating from "../components/StarRating";
+import ProfilePicture from "../components/ProfilePicture";
+import CravingItem from "../components/CravingItem";
+import { useContext, useEffect, useState } from "react";
+import { link } from "../api/link";
+import UserContext from "../contexts/UserContext";
+import { convertDate } from "../components/Helper";
 
 const craving_data = [
     {
-        id: '1',
-        restaurant: 'Kazunori',
+        id: "1",
+        restaurant: "Kazunori",
     },
     {
-        id: '2',
-        restaurant: 'Gogobop',
+        id: "2",
+        restaurant: "Gogobop",
     },
     {
-        id: '3',
-        restaurant: 'Cava',
+        id: "3",
+        restaurant: "Cava",
     },
     {
-        id: '4',
-        restaurant: 'Dennys',
+        id: "4",
+        restaurant: "Dennys",
     },
 ];
 
@@ -55,61 +59,84 @@ const list_data = [
     },
 ];
 
-const Item = ({ title, navigation }) => (
-    <View style={styles.restaurantContainer}>
-        <TouchableOpacity
-            onPress={() => {
-                navigation.navigate("Restaurant");
-            }}
-            style={styles.restaurant}>
-            <Text style={{ ...styles.restaurantTitle, ...styles.white }}>
-                Republique
-            </Text>
-            <View style={styles.topRowContainer}>
-                <Text style={{ ...styles.light_gray, ...styles.location }}>
-                    Los Angeles, Westwood • April 18
-                </Text>
-                <View style={styles.ratingContainer}>
-                    <FontAwesome5 name="star" color={primary} size={12} solid />
-                    <Text style={styles.ratingText}>4.8</Text>
-                </View>
-            </View>
-        </TouchableOpacity>
-        <View style={{ width: 400, height: 300 }}>
-            <Image
-                source={require("../../assets/download.jpeg")}
-                style={styles.image}
-            />
-        </View>
-        <View style={styles.bottomContainer}>
+const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
+    return (
+        <View style={styles.restaurantContainer}>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("Profile");
+                    navigation.navigate("Restaurant");
                 }}
-                style={styles.accountContainer}>
-                <ProfilePicture />
-                <View style={styles.nameContainer}>
-                    <View>
-                        <Text style={styles.white}>Hello</Text>
-                        <StarRating style={styles.ratingBar} />
-                    </View>
+                style={styles.restaurant}>
+                <Text style={{ ...styles.restaurantTitle, ...styles.white }}>
+                    {restaurant?.title}
+                </Text>
+                <View style={styles.topRowContainer}>
+                    <Text style={{ ...styles.light_gray, ...styles.location }}>
+                        {`${restaurant.location} • ${convertDate(createdAt)}`}
+                    </Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate("Entry");
-                }}>
-                <Text style={styles.white}>
-                    Yo mama fat Yo mama fat Yo mama fat Yo mama fat Yo mama fat
-                    Yo mama fat Yo mama fat
-                </Text>
-                <Text style={styles.comment}>Add a comment...</Text>
-            </TouchableOpacity>
+            <View style={{ width: 400, height: 300 }}>
+                <Image
+                    source={require("../../assets/download.jpeg")}
+                    style={styles.image}
+                />
+            </View>
+            <View style={styles.bottomContainer}>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate("Profile");
+                    }}
+                    style={styles.accountContainer}>
+                    <ProfilePicture />
+                    <View style={styles.nameContainer}>
+                        <View>
+                            <Text style={styles.white}>{user.username}</Text>
+                            <StarRating style={styles.ratingBar} />
+                        </View>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate("Entry");
+                    }}>
+                    <Text style={styles.white}>{caption}</Text>
+                    <Text style={styles.comment}>Add a comment...</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-    </View>
-);
+    );
+};
 
 const Feed = ({ navigation }) => {
+    const contextValue = useContext(UserContext);
+    const [friendsPost, getFriendsPost] = useState({});
+
+    console.log("YOYOYOYO", friendsPost.data);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${link}/getFriendsPosts`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        access_token: contextValue,
+                    },
+                });
+                const data = await response.json();
+                if (data.statusCode !== 200) {
+                    throw { name: data };
+                } else {
+                    getFriendsPost(data);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [contextValue]);
+
     return (
         <View style={styles.mainContainer}>
             <ScrollView style={styles.subContainer}>
@@ -118,17 +145,28 @@ const Feed = ({ navigation }) => {
                 </Text>
                 <FlatList
                     data={craving_data}
-                    renderItem={({ item }) => <CravingItem restaurant={item.restaurant} />}
+                    renderItem={({ item }) => (
+                        <CravingItem restaurant={item.restaurant} />
+                    )}
                     keyExtractor={(item) => item.id}
                     horizontal={true}
                     style={styles.cravingContainer}
                 />
                 <FlatList
-                    data={list_data}
-                    renderItem={({ item }) => <Item title={item.title} navigation={navigation} />}
+                    data={friendsPost?.data}
+                    renderItem={({ item }) => (
+                        <Item
+                            navigation={navigation}
+                            title={item.title}
+                            restaurant={item.Restaurant}
+                            user={item.User}
+                            createdAt={item.createdAt}
+                            caption={item.caption}
+                        />
+                    )}
                     keyExtractor={(item) => item.id}
                 />
-                <View style={{ width: '100%', height: 150 }} />
+                <View style={{ width: "100%", height: 150 }} />
             </ScrollView>
         </View>
     );
@@ -207,7 +245,7 @@ const styles = StyleSheet.create({
         color: gray_text,
     },
     cravingText: {
-        fontFamily: 'Lora_600SemiBold',
+        fontFamily: "Lora_600SemiBold",
         fontSize: 18,
         marginTop: 20,
     },
