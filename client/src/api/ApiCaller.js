@@ -2,27 +2,18 @@ import { API_ENDPOINT } from "@env";
 
 const baseUrl = API_ENDPOINT;
 
-export const ApiCaller = async (path = "", token = "", body) => {
-    const fullUrl = `${baseUrl}/${path}`;
+const ApiCaller = async (path = '', token = '', body) => {
+    const fullUrl = `${baseUrl}${path}`;
     let response = {};
 
-    if (method === "POST") {
-        response = await fetch(fullUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                accessToken: token,
-            },
-            body: JSON.stringify(body),
-        });
-    } else if (method === "GET") {
-        response = await fetch(fullUrl, {
-            method: "GET",
-            headers: {
-                access_token: token,
-            },
-        });
-    }
+    response = await fetch(fullUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            access_token: token,
+        },
+        body: JSON.stringify(body),
+    });
 
     const data = await response.json();
 
@@ -32,3 +23,5 @@ export const ApiCaller = async (path = "", token = "", body) => {
         return data;
     }
 };
+
+export default ApiCaller;
