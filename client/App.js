@@ -9,6 +9,7 @@ import {
     MESSAGING_SENDER_ID,
     APP_ID,
 } from "@env";
+import { LogBox } from "react-native";
 
 import UserContext from "./src/contexts/UserContext";
 import FirebaseStorageContext from "./src/contexts/FireStorageContext";
@@ -26,6 +27,9 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+LogBox.ignoreLogs(["Warning: ..."]);
+LogBox.ignoreAllLogs();
 
 export default function App() {
     const [token, setToken] = useState("");
