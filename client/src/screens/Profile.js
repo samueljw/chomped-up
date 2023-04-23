@@ -48,21 +48,23 @@ const dummy_data = [
     },
 ];
 
-const RestaurantCard = ({ navigation, title, rating, image }) => (
+const RestaurantCard = ({ navigation, restaurant }) => (
     <TouchableOpacity
         onPress={() => {
             navigation.navigate("Restaurant");
         }}
         style={styles.restaurantContainer}>
-        <Image source={{ uri: image }} style={styles.image} />
+        <Image source={{ uri: restaurant?.photo }} style={styles.image} />
         <Overlay bottom={true} borderRadius={20} alpha={0.7} />
         <View style={styles.imageText}>
-            <Text style={{ ...styles.itemText, ...styles.white }}>{title}</Text>
-            {rating && (
+            <Text style={{ ...styles.itemText, ...styles.white }}>
+                {restaurant?.title}
+            </Text>
+            {true && (
                 <StarRating
                     size={10}
                     style={{ marginVertical: 5 }}
-                    rating={rating}
+                    rating={5}
                 />
             )}
         </View>
@@ -70,40 +72,67 @@ const RestaurantCard = ({ navigation, title, rating, image }) => (
 );
 
 const Profile = ({ navigation, route }) => {
-    const parameter = route?.params;
+    const parameter = route.params;
     const [user, setUser] = useState({});
     const contextValue = useContext(UserContext);
 
-    console.log("user", user?.data);
+    console.log("user", user);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`${link}/getOneUser`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        access_token: contextValue,
-                    },
-                    body: JSON.stringify({ UserId: parameter.id }),
-                });
-                const data = await response.json();
-                if (data.statusCode !== 200) {
-                    throw { name: data };
-                } else {
-                    setUser(data);
+        if (parameter !== undefined) {
+            const fetchData = async () => {
+                try {
+                    const response = await fetch(`${link}/getOneUser`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            access_token: contextValue,
+                        },
+                        body: JSON.stringify({ UserId: parameter.id }),
+                    });
+                    const data = await response.json();
+                    if (data.statusCode !== 200) {
+                        throw { name: data };
+                    } else {
+                        setUser(data);
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchData();
+            };
+            fetchData();
+        } else {
+            const fetchData = async () => {
+                try {
+                    const response = await fetch(`${link}/getPersonalData`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            access_token: contextValue,
+                        },
+                    });
+                    const data = await response.json();
+                    if (data.statusCode !== 200) {
+                        throw { name: data };
+                    } else {
+                        setUser(data);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            fetchData();
+        }
     }, [contextValue]);
 
     return (
         <View style={styles.mainContainer}>
             <View style={styles.topRowContainer}>
-                <ProfilePicture width={80} height={80} />
+                <ProfilePicture
+                    source={user?.data?.ProfilePicture}
+                    width={80}
+                    height={80}
+                />
                 <View style={styles.bioContainer}>
                     <View style={styles.topRowName}>
                         <Text style={styles.name}>{user?.data?.username}</Text>
@@ -169,7 +198,7 @@ const Profile = ({ navigation, route }) => {
                     </Text>
                     <FlatList
                         horizontal
-                        data={dummy_data}
+                        data={user?.pastPost}
                         renderItem={({ item }) => (
                             <RestaurantCard
                                 title={item.title}
@@ -185,12 +214,11 @@ const Profile = ({ navigation, route }) => {
                     <Text style={styles.heading}>Restaurant wishlist</Text>
                     <FlatList
                         horizontal
-                        data={dummy_data}
+                        data={user?.wishlist}
                         renderItem={({ item }) => (
                             <RestaurantCard
-                                title={item.title}
                                 navigation={navigation}
-                                image={item.image}
+                                restaurant={item.Restaurant}
                             />
                         )}
                         keyExtractor={(item) => item.id}
