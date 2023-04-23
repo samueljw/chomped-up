@@ -59,8 +59,7 @@ const list_data = [
     },
 ];
 
-const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
-    console.log("wqdmqwmd", user);
+const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
     return (
         <View style={styles.restaurantContainer}>
             <TouchableOpacity
@@ -104,6 +103,7 @@ const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
                             user,
                             createdAt,
                             caption,
+                            postId,
                         });
                     }}>
                     <Text style={styles.white}>{caption}</Text>
@@ -116,9 +116,9 @@ const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
 
 const Feed = ({ navigation }) => {
     const contextValue = useContext(UserContext);
-    const [friendsPost, getFriendsPost] = useState({});
+    const [friendsPost, setFriendsPost] = useState({});
 
-    console.log("YOYOYOYO", friendsPost.data);
+    console.log("friendspost", friendsPost);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -134,7 +134,7 @@ const Feed = ({ navigation }) => {
                 if (data.statusCode !== 200) {
                     throw { name: data };
                 } else {
-                    getFriendsPost(data);
+                    setFriendsPost(data);
                 }
             } catch (error) {
                 console.log(error);
@@ -168,6 +168,7 @@ const Feed = ({ navigation }) => {
                             user={item.User}
                             createdAt={item.createdAt}
                             caption={item.caption}
+                            postId={item.id}
                         />
                     )}
                     keyExtractor={(item) => item.id}
