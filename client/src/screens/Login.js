@@ -7,6 +7,7 @@ import {
     ScrollView,
     TextInput,
     Alert,
+
 } from 'react-native';
 import { useContext } from 'react';
 import { Image } from 'react-native-elements';
@@ -24,6 +25,10 @@ const Login = ({ navigation }) => {
         password: '',
         username: '',
     });
+
+    useEffect(() => {
+        console.log(userData);
+    }, [userData]);
 
     const updateUserName = (newUserName) => {
         setUserData({
@@ -85,6 +90,7 @@ const Login = ({ navigation }) => {
                                     body: JSON.stringify(userData),
                                 });
                                 const data = await response.json();
+                                console.log("LOGIN", data);
 
                                 if (data.statusCode !== 200) {
                                     throw { name: data };

@@ -1,10 +1,17 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
-import { useContext, useEffect } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+    TouchableOpacity,
+    ScrollView,
+} from "react-native";
+import { useContext, useEffect } from "react";
 
-import { background, pure_white } from '../../assets/colors';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import UserContext from '../contexts/UserContext';
-import { clearStorage } from '../utils/AsyncStorage';
+import { background, pure_white } from "../../assets/colors";
+import { SafeAreaView } from "react-native-safe-area-context";
+import UserContext from "../contexts/UserContext";
+import { clearStorage } from "../utils/AsyncStorage";
 
 const Splash = ({ navigation }) => {
     const token = useContext(UserContext);
@@ -12,9 +19,9 @@ const Splash = ({ navigation }) => {
     useEffect(() => {
         setTimeout(() => {
             if (!token) {
-                navigation.navigate('Welcome');
+                navigation.navigate("Welcome");
             } else {
-                navigation.navigate('Tab');
+                navigation.navigate("Tab");
             }
         }, 1500);
     }, []);
@@ -28,16 +35,16 @@ const Splash = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%",
         backgroundColor: background,
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
     },
     text: {
         color: pure_white,
-        fontFamily: 'Lora_700Bold',
+        fontFamily: "Lora_700Bold",
         fontSize: 50,
     },
 });
