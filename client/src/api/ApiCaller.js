@@ -1,23 +1,23 @@
-import { API_ENDPOINT } from '@env';
+import { API_ENDPOINT } from "@env";
 
 const baseUrl = API_ENDPOINT;
 
-const ApiCaller = async (path = '', token = '', method = 'POST', body) => {
+export const ApiCaller = async (path = "", token = "", body) => {
     const fullUrl = `${baseUrl}/${path}`;
     let response = {};
 
-    if (method === 'POST') {
+    if (method === "POST") {
         response = await fetch(fullUrl, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 accessToken: token,
             },
             body: JSON.stringify(body),
         });
-    } else if (method === 'GET') {
+    } else if (method === "GET") {
         response = await fetch(fullUrl, {
-            method: 'GET',
+            method: "GET",
             headers: {
                 access_token: token,
             },

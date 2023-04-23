@@ -14,6 +14,8 @@ import Line from "../components/Line";
 import ProfilePicture from "../components/ProfilePicture";
 import BackButton from "../components/BackButton";
 import { convertDate } from "../components/Helper";
+import { useContext, useEffect, useState } from "react";
+import UserContext from "../contexts/UserContext";
 
 const persons = [
     {
@@ -43,7 +45,44 @@ const persons = [
 ];
 
 const Entry = ({ navigation, route }) => {
-    const { restaurant, user, createdAt, caption } = route.params;
+    const contextValue = useContext(UserContext);
+    const { restaurant, user, createdAt, caption, postId } = route.params;
+
+    console.log("TOKEN", contextValue);
+
+    const [comment, setComment] = useState({});
+
+    console.log("comments", JSON.stringify(postId));
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(
+                    `https://2763-169-232-83-79.ngrok.io/getComment`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            access_token: contextValue,
+                        },
+                        body: JSON.stringify({ PostId: postId }),
+                    }
+                );
+                const data = await response.json();
+                if (data.statusCode !== 200) {
+                    throw { name: data };
+                } else {
+                    console.log("data", data);
+                    setComment(data);
+                }
+            } catch (error) {
+                console.log("FAILLL");
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [contextValue]);
+
     return (
         <>
             <SafeAreaView style={styles.mainContainer}>
