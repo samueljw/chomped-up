@@ -6,8 +6,8 @@ import {
     TouchableOpacity,
     ScrollView,
     TextInput,
-} from "react-native";
-import { Image } from "react-native-elements";
+} from 'react-native';
+import { Image } from 'react-native-elements';
 import {
     background,
     black,
@@ -16,26 +16,26 @@ import {
     primary,
     pure_white,
     white,
-} from "../../assets/colors";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import SearchBar from "../components/SearchBar";
-import { SafeAreaView } from "react-native-safe-area-context";
-import UserContext from "../contexts/UserContext";
-import { useContext, useEffect, useRef, useState } from "react";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import * as Location from "expo-location";
-import { link } from "../api/link";
+} from '../../assets/colors';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import SearchBar from '../components/SearchBar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import UserContext from '../contexts/UserContext';
+import { useContext, useEffect, useRef, useState } from 'react';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import * as Location from 'expo-location';
+import { link } from '../api/link';
+import Overlay from '../components/Overlay';
 
 const NearRestaurant = ({ navigation, restaurant }) => (
     <TouchableOpacity
         // onPress={() => {
         //     navigation.navigate("Restaurant", { restaurant: { id: 1 } });
         // }}
-        style={styles.restaurantContainer}>
-        <Image
-            source={{ uri: restaurant?.["Photo-URL"] }}
-            style={styles.image}
-        />
+        style={styles.restaurantContainer}
+    >
+        <Image source={{ uri: restaurant?.['Photo-URL'] }} style={styles.image} />
+        <Overlay bottom={true} borderRadius={20} alpha={0.9} />
         <View style={styles.imageText}>
             <Text style={styles.nameText}>{restaurant?.Restaurant}</Text>
             {/* <Text
@@ -61,27 +61,32 @@ const NearRestaurant = ({ navigation, restaurant }) => (
 const SearchRestaurant = ({ navigation, restaurant }) => (
     <TouchableOpacity
         onPress={() => {
-            navigation.navigate("Restaurant", { restaurant: { id: 1 } });
+            navigation.navigate('Restaurant', { restaurant });
         }}
-        style={styles.restaurantContainer}>
+        style={styles.restaurantContainer}
+    >
         <Image source={{ uri: restaurant?.photo }} style={styles.image} />
+        <Overlay bottom={true} borderRadius={20} alpha={0.9} />
         <View style={styles.imageText}>
             <Text style={styles.nameText}>{restaurant?.title}</Text>
-            <Text
+            {/* <View
                 style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                }}>
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 5,
+                }}
+            >
                 <FontAwesome5 name="star" color={primary} size={12} solid />
                 <Text
                     style={{
                         marginLeft: 10,
-                        fontWeight: "600",
+                        fontWeight: '600',
                         color: pure_white,
-                    }}>
+                    }}
+                >
                     {restaurant?.rating}
                 </Text>
-            </Text>
+            </View> */}
             {/* <Text style={styles.white}>15 friends ate here</Text> */}
         </View>
     </TouchableOpacity>
@@ -90,30 +95,33 @@ const SearchRestaurant = ({ navigation, restaurant }) => (
 const RecommendedRestaurant = ({ navigation, restaurant }) => (
     <TouchableOpacity
         onPress={() => {
-            navigation.navigate("Restaurant", { restaurant: { id: 1 } });
+            navigation.navigate('Restaurant', { restaurant });
         }}
-        style={styles.restaurantContainer}>
-        <Image
-            source={{ uri: restaurant?.Restaurant?.photo }}
-            style={styles.image}
-        />
+        style={styles.restaurantContainer}
+    >
+        <Image source={{ uri: restaurant?.Restaurant?.photo }} style={styles.image} />
+        <Overlay bottom={true} borderRadius={20} alpha={0.9} />
         <View style={styles.imageText}>
             <Text style={styles.nameText}>{restaurant?.Restaurant?.title}</Text>
-            <Text
+            <View
                 style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                }}>
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    flex: 1,
+                    marginTop: 5,
+                }}
+            >
                 <FontAwesome5 name="star" color={primary} size={12} solid />
                 <Text
                     style={{
-                        marginLeft: 10,
-                        fontWeight: "600",
+                        marginLeft: 5,
+                        fontWeight: '600',
                         color: pure_white,
-                    }}>
+                    }}
+                >
                     {restaurant?.rating}
                 </Text>
-            </Text>
+            </View>
             {/* <Text style={styles.white}>15 friends ate here</Text> */}
         </View>
     </TouchableOpacity>
@@ -128,7 +136,7 @@ const Search = ({ navigation }) => {
     const [restoRec, setRestoRec] = useState({});
 
     const [isFocused, setIsFocused] = useState(false);
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const searchInputRef = useRef(null);
     const token = useContext(UserContext);
@@ -136,9 +144,9 @@ const Search = ({ navigation }) => {
     const handleSearch = async () => {
         try {
             const response = await fetch(`${link}/getAllResto`, {
-                method: "POST",
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                     access_token: token,
                 },
             });
@@ -153,8 +161,6 @@ const Search = ({ navigation }) => {
         }
     };
 
-    console.log("search", searchResults);
-
     const handleIconPress = () => {
         searchInputRef.current.focus();
     };
@@ -162,14 +168,14 @@ const Search = ({ navigation }) => {
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                console.log("Permission to access location was denied");
+            if (status !== 'granted') {
+                console.log('Permission to access location was denied');
                 return;
             }
 
             let location = await Location.getCurrentPositionAsync({});
-            setLatitude(location.coords.latitude);
-            setLongitude(location.coords.longitude);
+            setLatitude(34.073);
+            setLongitude(-118.45);
         })();
     }, []);
 
@@ -177,9 +183,9 @@ const Search = ({ navigation }) => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`${link}/getRestoAround`, {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                         access_token: contextValue,
                     },
                     body: JSON.stringify({
@@ -204,9 +210,9 @@ const Search = ({ navigation }) => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`${link}/getRecommendation`, {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json",
+                        'Content-Type': 'application/json',
                         access_token: contextValue,
                     },
                 });
@@ -215,7 +221,6 @@ const Search = ({ navigation }) => {
                     throw { name: data };
                 } else {
                     setRestoRec(data);
-                    console.log("SUCCESS");
                 }
             } catch (error) {
                 console.log(error);
@@ -243,9 +248,7 @@ const Search = ({ navigation }) => {
                             onFocus={() => setIsFocused(true)} // Set isFocused to true when input is focused
                             onBlur={() => setIsFocused(false)} // Set isFocused to false when input is blurred
                         />
-                        <TouchableOpacity
-                            style={styles.icon}
-                            onPress={handleIconPress}>
+                        <TouchableOpacity style={styles.icon} onPress={handleIconPress}>
                             <Icon
                                 name="search"
                                 type="evilicon"
@@ -262,10 +265,7 @@ const Search = ({ navigation }) => {
                             horizontal
                             data={searchResults}
                             renderItem={({ item }) => (
-                                <SearchRestaurant
-                                    navigation={navigation}
-                                    restaurant={item}
-                                />
+                                <SearchRestaurant navigation={navigation} restaurant={item} />
                             )}
                             keyExtractor={(item) => item.id}
                         />
@@ -279,10 +279,7 @@ const Search = ({ navigation }) => {
                         horizontal
                         data={restoRec?.data}
                         renderItem={({ item }) => (
-                            <RecommendedRestaurant
-                                navigation={navigation}
-                                restaurant={item}
-                            />
+                            <RecommendedRestaurant navigation={navigation} restaurant={item} />
                         )}
                         keyExtractor={(item) => item.id}
                     />
@@ -293,10 +290,7 @@ const Search = ({ navigation }) => {
                         horizontal
                         data={restoNearMe?.data}
                         renderItem={({ item }) => (
-                            <NearRestaurant
-                                navigation={navigation}
-                                restaurant={item}
-                            />
+                            <NearRestaurant navigation={navigation} restaurant={item} />
                         )}
                         keyExtractor={(item) => item.id}
                     />
@@ -308,8 +302,8 @@ const Search = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: background,
         flex: 1,
     },
@@ -327,7 +321,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 15,
         marginBottom: 15,
-        fontFamily: "Lora_600SemiBold",
+        fontFamily: 'Lora_600SemiBold',
     },
     subContainer: {
         marginTop: 20,
@@ -339,13 +333,13 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     topRowContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     ratingText: {
         marginLeft: 5,
@@ -354,28 +348,28 @@ const styles = StyleSheet.create({
     image: {
         width: 142,
         height: 200,
-        resizeMode: "cover",
+        resizeMode: 'cover',
         borderRadius: 20,
     },
     profileImage: {
         width: 45,
         height: 45,
         borderRadius: 999,
-        resizeMode: "cover",
+        resizeMode: 'cover',
     },
     bottomContainer: {
         margin: 20,
     },
     accountContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 15,
     },
     starContainer: {
-        flexDirection: "row",
+        flexDirection: 'row',
     },
     star: {
-        flexDirection: "row",
+        flexDirection: 'row',
     },
     nameContainer: {
         marginLeft: 15,
@@ -384,18 +378,18 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     imageText: {
-        position: "absolute",
+        position: 'absolute',
         margin: 10,
         bottom: 0,
     },
     nameText: {
         color: pure_white,
         fontSize: 16,
-        fontFamily: "Lora_600SemiBold",
+        fontFamily: 'Lora_700Bold',
     },
     container: {
-        position: "relative",
-        backgroundColor: "transparent",
+        position: 'relative',
+        backgroundColor: 'transparent',
     },
     input: {
         height: 50,
@@ -407,12 +401,12 @@ const styles = StyleSheet.create({
         borderColor: black, // Set initial border color
     },
     icon: {
-        position: "absolute",
+        position: 'absolute',
         top: 14,
         right: 18,
         width: 20,
         height: 20,
-        resizeMode: "contain",
+        resizeMode: 'contain',
     },
     inputFocused: {
         borderColor: primary, // Set border color to primary color when focused
