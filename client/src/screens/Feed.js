@@ -60,6 +60,7 @@ const list_data = [
 ];
 
 const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
+    console.log("wqdmqwmd", user);
     return (
         <View style={styles.restaurantContainer}>
             <TouchableOpacity
@@ -91,14 +92,19 @@ const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
                     <ProfilePicture />
                     <View style={styles.nameContainer}>
                         <View>
-                            <Text style={styles.white}>{user.username}</Text>
+                            <Text style={styles.white}>{user?.username}</Text>
                             <StarRating style={styles.ratingBar} />
                         </View>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Entry");
+                        navigation.navigate("Entry", {
+                            restaurant,
+                            user,
+                            createdAt,
+                            caption,
+                        });
                     }}>
                     <Text style={styles.white}>{caption}</Text>
                     <Text style={styles.comment}>Add a comment...</Text>

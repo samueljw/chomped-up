@@ -13,6 +13,7 @@ import StarRating from "../components/StarRating";
 import Line from "../components/Line";
 import ProfilePicture from "../components/ProfilePicture";
 import BackButton from "../components/BackButton";
+import { convertDate } from "../components/Helper";
 
 const persons = [
     {
@@ -41,7 +42,8 @@ const persons = [
     },
 ];
 
-const Entry = ({ navigation }) => {
+const Entry = ({ navigation, route }) => {
+    const { restaurant, user, createdAt, caption } = route.params;
     return (
         <>
             <SafeAreaView style={styles.mainContainer}>
@@ -54,16 +56,20 @@ const Entry = ({ navigation }) => {
                             <ProfilePicture width={80} height={80} />
                             <View style={styles.nameContainer}>
                                 <View style={styles.topRowName}>
-                                    <Text style={styles.name}>Jane Doe</Text>
+                                    <Text style={styles.name}>
+                                        {user?.username}
+                                    </Text>
                                 </View>
                             </View>
                         </View>
                         <View style={styles.textContainer}>
                             <Text style={styles.restaurantName}>
-                                Republique
+                                {restaurant?.title}
                             </Text>
                             <Text style={styles.light_gray}>
-                                Los Angeles, Westwood • April 18
+                                {`${restaurant.location} • ${convertDate(
+                                    createdAt
+                                )}`}
                             </Text>
                         </View>
                         <View style={styles.buttonContainer}>
