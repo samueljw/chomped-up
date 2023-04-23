@@ -28,7 +28,7 @@ import { clearStorage } from "../utils/AsyncStorage";
 import UserContext from "../contexts/UserContext";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { link } from "../api/link";
-import AnimatedLoader from "react-native-animated-loader";
+import SpinnerOverlay from "react-native-loading-spinner-overlay";
 
 const Chat = ({ navigation }) => {
     const token = useContext(UserContext);
@@ -67,19 +67,23 @@ const Chat = ({ navigation }) => {
     };
 
     const handleIconPress = () => {
-        searchInputRef.current.focus();
+        if (searchText.length > 0) {
+            handleSearch();
+        } else {
+            searchInputRef.current.focus();
+        }
     };
 
     return (
         <View style={styles.mainContainer}>
             <View style={{ margin: 30 }}>
-                <AnimatedLoader
+                <SpinnerOverlay
                     visible={visible}
-                    overlayColor="rgba(255,255,255,0.75)"
-                    animationStyle={styles.lottie}
-                    speed={1}>
-                    <Text>Typing...</Text>
-                </AnimatedLoader>
+                    color={primary} // Set spinner color
+                    size="large" // Set spinner size
+                    textContent="Typing..." // Set text content
+                    textStyle={{ color: "white" }} // Customize text style
+                />
                 <Text style={styles.white}>{searchResults?.data}</Text>
             </View>
             <View style={{ position: "absolute", width: "100%", bottom: 0 }}>
