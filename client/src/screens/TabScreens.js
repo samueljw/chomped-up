@@ -77,6 +77,11 @@ const TabScreen = () => {
                     component={Restaurant}
                     options={backOption}
                 />
+                <Stack.Screen
+                    name="Profile"
+                    component={Profile}
+                    options={backOption}
+                />
             </Stack.Navigator>
         );
     };

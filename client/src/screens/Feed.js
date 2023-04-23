@@ -18,40 +18,6 @@ import { link } from '../api/link';
 import UserContext from '../contexts/UserContext';
 import { convertDate } from '../components/Helper';
 
-const craving_data = [
-    {
-        id: '1',
-        restaurant: 'Kazunori',
-    },
-    {
-        id: '2',
-        restaurant: 'Gogobop',
-    },
-    {
-        id: '3',
-        restaurant: 'Cava',
-    },
-    {
-        id: '4',
-        restaurant: 'Dennys',
-    },
-];
-
-const list_data = [
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-];
-
 const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
     return (
         <View style={styles.restaurantContainer}>
@@ -112,8 +78,32 @@ const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
 const Feed = ({ navigation }) => {
     const contextValue = useContext(UserContext);
     const [friendsPost, setFriendsPost] = useState({});
+    const [cravings, setCravings] = useState({});
 
-    console.log('friendspost', friendsPost);
+    console.log("cravings data", cravings?.data);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${link}/getFriendsCraving`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        access_token: contextValue,
+                    },
+                });
+                const data = await response.json();
+                if (data.statusCode !== 200) {
+                    throw { name: data };
+                } else {
+                    setCravings(data);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [contextValue]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -145,28 +135,36 @@ const Feed = ({ navigation }) => {
                     What your friends have been craving
                 </Text>
                 <FlatList
-                    data={craving_data}
-                    renderItem={({ item }) => <CravingItem restaurant={item.restaurant} />}
+                    data={cravings?.data}
+                    renderItem={({ item }) => (
+                        <CravingItem
+                            navigation={navigation}
+                            restaurant={item.Restaurant}
+                            id={item.id}
+                        />
+                    )}
                     keyExtractor={(item) => item.id}
                     horizontal={true}
                     style={styles.cravingContainer}
                 />
-                <FlatList
-                    data={friendsPost?.data}
-                    renderItem={({ item }) => (
-                        <Item
-                            navigation={navigation}
-                            title={item.title}
-                            restaurant={item.Restaurant}
-                            user={item.User}
-                            createdAt={item.createdAt}
-                            caption={item.caption}
-                            postId={item.id}
-                        />
-                    )}
-                    keyExtractor={(item) => item.id}
-                />
-                <View style={{ width: '100%', height: 150 }} />
+                <View style={{ marginRight: 15 }}>
+                    <FlatList
+                        data={friendsPost?.data}
+                        renderItem={({ item }) => (
+                            <Item
+                                navigation={navigation}
+                                title={item.title}
+                                restaurant={item.Restaurant}
+                                user={item.User}
+                                createdAt={item.createdAt}
+                                caption={item.caption}
+                                postId={item.id}
+                            />
+                        )}
+                        keyExtractor={(item) => item.id}
+                    />
+                </View>
+                <View style={{ width: "100%", height: 150 }} />
             </ScrollView>
         </View>
     );
@@ -190,7 +188,6 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         marginLeft: 15,
-        marginRight: 15,
     },
     restaurantContainer: {
         backgroundColor: black,
