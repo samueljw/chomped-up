@@ -39,6 +39,7 @@ const Log = ({ navigation, route }) => {
     const [caption, setCaption] = useState('');
     const [uploading, setUploading] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(true);
+    const [personalData, setPersonalData] = useState({});
     const { restaurant } = route.params;
     const token = useContext(UserContext);
 
@@ -49,6 +50,20 @@ const Log = ({ navigation, route }) => {
             setButtonDisabled(true);
         }
     }, [localUri, rating, caption]);
+
+    useEffect(() => {
+        const getPersonalData = async () => {
+            try {
+                const { data } = await ApiCaller('/getPersonalData', token);
+                setPersonalData(data);
+                console.log('DATA', JSON.stringify(data, null, 2));
+                return;
+            } catch (e) {
+                console.log('ERROR', e);
+            }
+        };
+        getPersonalData();
+    }, []);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -121,10 +136,14 @@ const Log = ({ navigation, route }) => {
                 </View>
                 <View style={styles.subContainer}>
                     <View style={styles.topRowContainer}>
-                        <ProfilePicture width={80} height={80} />
+                        <ProfilePicture
+                            width={80}
+                            height={80}
+                            source={personalData?.profilePicture}
+                        />
                         <View style={styles.nameContainer}>
                             <View style={styles.topRowName}>
-                                <Text style={styles.name}>janedoe</Text>
+                                <Text style={styles.name}>{personalData?.username}</Text>
                             </View>
                         </View>
                     </View>
