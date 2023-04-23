@@ -67,6 +67,10 @@ const customOption = ({ navigation }) => ({
         backgroundColor: "black",
         color: "white",
     },
+    headerTitleStyle: {
+        fontFamily: "Lora_600SemiBold",
+        color: "white",
+    },
     headerRight: () => <CustomComponent navigation={navigation} />,
 });
 
