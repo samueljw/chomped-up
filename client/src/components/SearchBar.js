@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import {
     background,
@@ -8,13 +8,33 @@ import {
     pure_white,
 } from "../../assets/colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import {API_ENDPOINT} from "@env"
+import UserContext from "../contexts/UserContext";
 
 const SearchBar = () => {
     const [isFocused, setIsFocused] = useState(false);
     const [searchText, setSearchText] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
     const searchInputRef = useRef(null);
+    const token = useContext(UserContext);
 
-    const handleSearch = () => {};
+    const handleSearch = async () => {
+        try {
+            const response = await fetch(
+                `${API_ENDPOINT}/getAllResto`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        access_token: token,
+                    },
+                });
+            const data = await response.json();
+            setSearchResults(data);
+        } catch (error) {
+            console.error(error);
+          }
+    };
 
     const handleIconPress = () => {
         searchInputRef.current.focus();
