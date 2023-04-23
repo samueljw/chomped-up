@@ -171,10 +171,7 @@ const Restaurant = ({ navigation, route }) => {
             <View style={styles.mainContainer}>
                 <ScrollView style={styles.outerWrapper} bounces={true}>
                     <View style={styles.backdropWrapper}>
-                        <Image
-                            source={require('../../assets/download.jpeg')}
-                            style={styles.backdropImage}
-                        />
+                        <Image source={{ uri: restoData?.photo }} style={styles.backdropImage} />
                         <LinearGradient
                             colors={['transparent', 'rgba(0, 0, 0, 0.8)']}
                             style={{
