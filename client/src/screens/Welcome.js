@@ -1,23 +1,10 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
-import { useContext, useEffect, useState } from 'react';
 import { Image } from 'react-native-elements';
-import { ref, getDownloadURL } from 'firebase/storage';
 
-import FirebaseStorageContext from '../contexts/FireStorageContext';
 import { pure_white, bright_yellow } from '../../assets/colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Welcome = ({ navigation }) => {
-    const [url, setUrl] = useState('');
-    const value = useContext(FirebaseStorageContext);
-    const listRef = ref(value, 'images');
-
-    useEffect(() => {
-        getDownloadURL(listRef).then((res) => {
-            setUrl(res);
-        });
-    }, []);
-
     return (
         <View style={styles.outerWrapper}>
             <View style={styles.backdropWrapper}>

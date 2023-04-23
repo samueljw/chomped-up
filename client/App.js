@@ -8,7 +8,7 @@ import {
     STORAGE_BUCKET,
     MESSAGING_SENDER_ID,
     APP_ID,
-} from "@env";
+} from '@env';
 
 import UserContext from './src/contexts/UserContext';
 import FirebaseStorageContext from './src/contexts/FireStorageContext';
@@ -26,7 +26,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
 
 export default function App() {
     const [token, setToken] = useState('');
@@ -38,7 +37,7 @@ export default function App() {
 
     return (
         <UserContext.Provider value={token}>
-            <FirebaseStorageContext.Provider value={storage}>
+            <FirebaseStorageContext.Provider value={app}>
                 <FontWrapper>
                     <TabScreen></TabScreen>
                 </FontWrapper>
