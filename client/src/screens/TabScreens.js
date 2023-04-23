@@ -20,6 +20,7 @@ import Setting from "./Setting";
 import BackButton from "../components/BackButton";
 import IconButton from "../components/IconButton";
 import AcceptFriends from "./AcceptFriends";
+import Chat from "./Chat";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,6 +35,11 @@ const CustomComponent = ({ navigation }) => {
             <IconButton
                 icon_name="user-friends"
                 screen="Friends"
+                navigation={navigation}
+            />
+            <IconButton
+                icon_name="comment"
+                screen="Chat"
                 navigation={navigation}
             />
             <IconButton
@@ -99,6 +105,11 @@ const TabScreen = () => {
                 <Stack.Screen
                     name="Restaurant"
                     component={Restaurant}
+                    options={backOption}
+                />
+                <Stack.Screen
+                    name="Chat"
+                    component={Chat}
                     options={backOption}
                 />
             </Stack.Navigator>

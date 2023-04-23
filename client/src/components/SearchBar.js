@@ -72,7 +72,7 @@ const SearchBar = () => {
                     size={23}
                 />
             </TouchableOpacity>
-            {searchResults.map((item, index) => (
+            {/* {searchResults.map((item, index) => (
                 <TouchableOpacity
                     onPress={() => {
                         navigation.navigate("Restaurant");
@@ -83,7 +83,7 @@ const SearchBar = () => {
                         <Text style={styles.names}>{item.title}</Text>
                     </View>
                 </TouchableOpacity>
-            ))}
+            ))} */}
         </View>
     );
 };
