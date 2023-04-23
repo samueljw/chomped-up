@@ -53,7 +53,7 @@ const Item = ({
             </TouchableOpacity>
             <View style={{ width: 400, height: 300 }}>
                 <Image
-                    source={require("../../assets/download.jpeg")}
+                    source={{ uri: restaurant?.photo }}
                     style={styles.image}
                 />
             </View>
@@ -94,7 +94,7 @@ const Feed = ({ navigation }) => {
     const [friendsPost, setFriendsPost] = useState({});
     const [cravings, setCravings] = useState({});
 
-    console.log("cravings data", cravings?.data);
+    console.log("crave", cravings?.data);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -155,6 +155,7 @@ const Feed = ({ navigation }) => {
                             navigation={navigation}
                             restaurant={item.Restaurant}
                             id={item.id}
+                            profilePicture={item.profilePicture}
                         />
                     )}
                     keyExtractor={(item) => item.id}

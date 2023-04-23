@@ -10,13 +10,14 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import { white } from "../../assets/colors";
 
-const CravingItem = ({ navigation, restaurant, id }) => {
+const CravingItem = ({ navigation, restaurant, id, profilePicture }) => {
+    console.log("id", id);
     return (
         <TouchableOpacity
             onPress={() => navigation.navigate("Profile", { id })}
             style={styles.wrapper}>
             <ImageBackground
-                source={require("../../assets/download.jpeg")}
+                source={{ uri: restaurant?.photo }}
                 resizeMode={"cover"}
                 imageStyle={{ borderRadius: 10 }}
                 style={styles.backdrop}>
@@ -34,7 +35,7 @@ const CravingItem = ({ navigation, restaurant, id }) => {
                 />
                 <View style={styles.container}>
                     <Image
-                        source={require("../../assets/download.jpeg")}
+                        source={{ uri: profilePicture }}
                         style={styles.profile}
                     />
                     <Text style={styles.restaurant}>{restaurant?.title}</Text>

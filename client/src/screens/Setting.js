@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Image } from "react-native-elements";
 import {
@@ -17,8 +17,12 @@ import Line from "../components/Line";
 import ProfilePicture from "../components/ProfilePicture";
 import BackButton from "../components/BackButton";
 import CustomButton from "../components/CustomButton";
+import { clearStorage } from "../utils/AsyncStorage";
+import UserContext from "../contexts/UserContext";
 
 const Setting = ({ navigation }) => {
+    const token = useContext(UserContext);
+
     return (
         <SafeAreaView style={styles.mainContainer}>
             <View style={styles.backContainer}>
@@ -36,6 +40,10 @@ const Setting = ({ navigation }) => {
                     text="Log out"
                     text_color={pure_white}
                     button_color={red}
+                    onPress={() => {
+                        // clearStorage();
+                        // navigation.navigate("Login");
+                    }}
                 />
             </View>
         </SafeAreaView>
