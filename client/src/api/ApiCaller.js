@@ -1,5 +1,5 @@
 import { API_ENDPOINT } from '@env';
-import link from '../api/link';
+import { link } from '../api/link';
 
 const baseUrl = link;
 
