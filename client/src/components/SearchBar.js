@@ -30,6 +30,7 @@ const SearchBar = () => {
                     },
                 });
             const data = await response.json();
+            console.log(data.data)
             setSearchResults(data.data);
         } catch (error) {
             console.error(error);
@@ -64,12 +65,12 @@ const SearchBar = () => {
                     size={23}
                 />
             </TouchableOpacity>
-            {searchResults.map((item, index) => (
+            {/* {searchResults.map((item, index) => (
                 <View key={index}>
                     <Image source={{ uri: item.photo }} style={{ width: 200, height: 200 }} />
                     <Text>{item.title}</Text>
               </View>
-            ))}   
+            ))}    */}
         </View>
     );
 };
