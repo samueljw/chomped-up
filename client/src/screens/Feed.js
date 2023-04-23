@@ -9,7 +9,6 @@ import {
     pure_white,
     white,
 } from '../../assets/colors';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import StarRating from '../components/StarRating';
 import ProfilePicture from '../components/ProfilePicture';
 import CravingItem from '../components/CravingItem';

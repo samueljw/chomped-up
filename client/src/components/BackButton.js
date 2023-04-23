@@ -1,6 +1,6 @@
-import { TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import { gray, gray_text } from "../../assets/colors";
+import { TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { input_background, gray_text } from '../../assets/colors';
 
 const BackButton = ({ navigation }) => {
     return (
@@ -9,16 +9,12 @@ const BackButton = ({ navigation }) => {
                 navigation.goBack();
             }}
             style={{
-                backgroundColor: gray,
+                backgroundColor: input_background,
                 width: 30,
                 borderRadius: 10,
-            }}>
-            <Icon
-                name="chevron-left"
-                type="evilicon"
-                color={gray_text}
-                size={30}
-            />
+            }}
+        >
+            <Icon name="chevron-left" type="evilicon" color={gray_text} size={30} />
         </TouchableOpacity>
     );
 };

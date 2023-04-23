@@ -5,10 +5,9 @@ import {
     FlatList,
     TouchableOpacity,
     ScrollView,
-    TextInput,
     Image,
 } from 'react-native';
-import { useState, useContext, useEffect, useCallback } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
     pure_white,
@@ -18,7 +17,7 @@ import {
     black,
     icon_unselected,
 } from '../../assets/colors';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ApiCaller from '../api/ApiCaller';
 import UserContext from '../contexts/UserContext';
@@ -33,9 +32,11 @@ const ProfileElem = ({ profilePicture, rating }) => {
             {rating && (
                 <View style={styles.hasEatenStars}>
                     {[...Array(fullStars).keys()].map(() => {
-                        return <Icon name="star" color={pure_white} size={12} />;
+                        return <FontAwesome5 name="star" color={pure_white} size={12} solid />;
                     })}
-                    {halfStar && <Icon name="star-half" color={pure_white} size={12} />}
+                    {halfStar && (
+                        <FontAwesome5 name="star-half" color={pure_white} size={12} solid />
+                    )}
                 </View>
             )}
         </View>
@@ -49,7 +50,7 @@ const Restaurant = ({ navigation, route }) => {
     const [friendsWishlist, setFriendsWishlist] = useState([]);
     const { restaurant: restoData } = route.params;
 
-    useEffect(async () => {
+    useEffect(() => {
         const fetchFriendsRatings = async () => {
             try {
                 const reqBody = { RestoId: restoData.id };
@@ -89,8 +90,7 @@ const Restaurant = ({ navigation, route }) => {
     const onWishlistButtonPress = async () => {
         try {
             const reqBody = { RestoId: restoData.id };
-            const { data } = await ApiCaller('/postWishlist', token, reqBody);
-            setFriendsRatings(data);
+            await ApiCaller('/postWishlist', token, reqBody);
             return;
         } catch (e) {
             console.log('ERROR', e);
@@ -100,8 +100,7 @@ const Restaurant = ({ navigation, route }) => {
     const onCravingButtonPress = async () => {
         try {
             const reqBody = { RestoId: restoData.id };
-            const { data } = await ApiCaller('/postCraving', token, reqBody);
-            setFriendsRatings(data);
+            await ApiCaller('/postCraving', token, reqBody);
             return;
         } catch (e) {
             console.log('ERROR', e);
@@ -118,11 +117,11 @@ const Restaurant = ({ navigation, route }) => {
                     <View style={styles.interactButtonsWrapper}>
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate('Log');
+                                navigation.navigate('Log', { restaurant: restoData });
                             }}
                             style={styles.interactButtonContainer}
                         >
-                            <FontAwesome5 name="plus" color={bright_yellow} size={24} />
+                            <FontAwesome5 name="plus" color={bright_yellow} size={24} solid />
                             <Text
                                 style={{
                                     ...styles.interactButtonTitle,
@@ -136,7 +135,7 @@ const Restaurant = ({ navigation, route }) => {
                             style={styles.interactButtonContainer}
                             onPress={() => onWishlistButtonPress()}
                         >
-                            <Icon name="bookmark" color={bright_yellow} size={24} />
+                            <FontAwesome5 name="bookmark" color={bright_yellow} size={24} solid />
                             <Text
                                 style={{
                                     ...styles.interactButtonTitle,
@@ -202,7 +201,7 @@ const Restaurant = ({ navigation, route }) => {
                         </Text>
                         <View style={styles.contentRatings}>
                             <View style={styles.contentRatingBox}>
-                                <Icon name="star" color={bright_yellow} size={30} />
+                                <FontAwesome5 name="star" color={bright_yellow} size={30} solid />
                                 <Image style={styles.contentRatingIcon} />
                                 <View style={styles.contentRatingText}>
                                     <Text
