@@ -1,6 +1,6 @@
 # Chomped Up - Foodie Social Media App
 
-Chomped Up is a social media app that allows food enthusiasts to share, rate, and discover food with friends. Built using React Native for frontend, Google Maps API, Google Places API, OpenAI API, and Firestore for backend, it provides a seamless user experience for foodies to connect over cuisine.
+Chomped Up is a social media app that allows food enthusiasts to share, rate, and discover food with friends. Built using React Native for the frontend, Node.js, Express, Firestore for the backend, and PostgreSQL, Google Maps API, Google Places API, OpenAI API, which provides a seamless user experience for foodies to connect over cuisine.
 
 ## Features
 
