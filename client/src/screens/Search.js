@@ -1,9 +1,25 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
-import { Image } from 'react-native-elements';
-import { background, gray_text, light_gray, primary, pure_white, white } from '../../assets/colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import SearchBar from '../components/SearchBar';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+    TouchableOpacity,
+    ScrollView,
+} from "react-native";
+import { Image } from "react-native-elements";
+import {
+    background,
+    gray_text,
+    light_gray,
+    primary,
+    pure_white,
+    white,
+} from "../../assets/colors";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import SearchBar from "../components/SearchBar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import UserContext from "../contexts/UserContext";
+import { useContext, useRef } from "react";
 
 const dummy_data = [
     {
@@ -31,7 +47,7 @@ const Item = ({ navigation }) => (
         <View style={styles.imageText}>
             <Text>Sun Nong Dan</Text>
             <Text>4.3</Text>
-            <Text>15 friends ate here recently</Text>
+            <Text>15 friends ate here</Text>
         </View>
     </TouchableOpacity>
 );
