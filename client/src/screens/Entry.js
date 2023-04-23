@@ -13,7 +13,7 @@ import StarRating from "../components/StarRating";
 import Line from "../components/Line";
 import ProfilePicture from "../components/ProfilePicture";
 import BackButton from "../components/BackButton";
-import { convertDate } from "../components/Helper";
+import { convertDate, convertTimeTo12HourFormat } from "../components/Helper";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/UserContext";
 
@@ -48,11 +48,7 @@ const Entry = ({ navigation, route }) => {
     const contextValue = useContext(UserContext);
     const { restaurant, user, createdAt, caption, postId } = route.params;
 
-    console.log("TOKEN", contextValue);
-
-    const [comment, setComment] = useState({});
-
-    console.log("comments", JSON.stringify(postId));
+    const [comments, setComments] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -72,11 +68,9 @@ const Entry = ({ navigation, route }) => {
                 if (data.statusCode !== 200) {
                     throw { name: data };
                 } else {
-                    console.log("data", data);
-                    setComment(data);
+                    setComments(data);
                 }
             } catch (error) {
-                console.log("FAILLL");
                 console.log(error);
             }
         };
@@ -126,9 +120,12 @@ const Entry = ({ navigation, route }) => {
                     </View>
                     <View style={styles.commentContainer}>
                         <View>
-                            {persons.map((person) => {
+                            {comments?.data?.map((comment, i) => {
+                                console.log("dasda", comment);
                                 return (
-                                    <View style={styles.accountContainer}>
+                                    <View
+                                        key={i}
+                                        style={styles.accountContainer}>
                                         <ProfilePicture />
                                         <View
                                             style={
@@ -140,18 +137,22 @@ const Entry = ({ navigation, route }) => {
                                                         style={
                                                             styles.accountName
                                                         }>
-                                                        {person.name}
+                                                        nama orang
                                                     </Text>
                                                     <Text
                                                         style={
                                                             styles.gray_text
                                                         }>
-                                                        Today, 10:11 AM
+                                                        {convertDate(createdAt)}
+                                                        ,{" "}
+                                                        {convertTimeTo12HourFormat(
+                                                            createdAt
+                                                        )}
                                                     </Text>
                                                 </View>
 
                                                 <Text style={styles.white}>
-                                                    omg it looks so good
+                                                    {comment?.comment}
                                                 </Text>
                                             </View>
                                         </View>
