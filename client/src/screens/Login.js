@@ -8,7 +8,7 @@ import {
     TextInput,
     Alert,
 } from "react-native";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Image } from "react-native-elements";
 import {
     pure_white,
@@ -30,6 +30,10 @@ const Login = ({ navigation }) => {
         password: "",
         username: "",
     });
+
+    useEffect(() => {
+        console.log(userData);
+    }, [userData]);
 
     const updateUserName = (newUserName) => {
         setUserData({
@@ -76,6 +80,7 @@ const Login = ({ navigation }) => {
                         text="Password"
                         data={userData.password}
                         setData={updatePassword}
+                        password
                     />
                     <TouchableOpacity
                         style={styles.mainButton}
@@ -89,6 +94,7 @@ const Login = ({ navigation }) => {
                                     body: JSON.stringify(userData),
                                 });
                                 const data = await response.json();
+                                console.log("LOGIN", data);
 
                                 if (data.statusCode !== 200) {
                                     throw { name: data };
