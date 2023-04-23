@@ -22,6 +22,7 @@ import CustomInput from "../components/CustomInput";
 import { useState } from "react";
 import { setToLocal, getFromLocal } from "../utils/AsyncStorage";
 import UserContext from "../contexts/UserContext";
+import { link } from "../api/link";
 
 const Login = ({ navigation }) => {
     const token = useContext(UserContext);
@@ -80,16 +81,13 @@ const Login = ({ navigation }) => {
                         style={styles.mainButton}
                         onPress={async () => {
                             try {
-                                const response = await fetch(
-                                    "https://2763-169-232-83-79.ngrok.io/login",
-                                    {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify(userData),
-                                    }
-                                );
+                                const response = await fetch(`${link}/login`, {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(userData),
+                                });
                                 const data = await response.json();
 
                                 if (data.statusCode !== 200) {

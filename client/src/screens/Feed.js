@@ -1,12 +1,5 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    ScrollView,
-} from "react-native";
-import { Image } from "react-native-elements";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { Image } from 'react-native-elements';
 import {
     background,
     black,
@@ -15,59 +8,26 @@ import {
     primary,
     pure_white,
     white,
-} from "../../assets/colors";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import StarRating from "../components/StarRating";
-import ProfilePicture from "../components/ProfilePicture";
-import CravingItem from "../components/CravingItem";
-import { useContext, useEffect, useState } from "react";
-import { link } from "../api/link";
-import UserContext from "../contexts/UserContext";
-import { convertDate } from "../components/Helper";
+} from '../../assets/colors';
+import StarRating from '../components/StarRating';
+import ProfilePicture from '../components/ProfilePicture';
+import CravingItem from '../components/CravingItem';
+import { useContext, useEffect, useState } from 'react';
+import { link } from '../api/link';
+import UserContext from '../contexts/UserContext';
+import { convertDate } from '../components/Helper';
 
-const craving_data = [
-    {
-        id: "1",
-        restaurant: "Kazunori",
-    },
-    {
-        id: "2",
-        restaurant: "Gogobop",
-    },
-    {
-        id: "3",
-        restaurant: "Cava",
-    },
-    {
-        id: "4",
-        restaurant: "Dennys",
-    },
-];
-
-const list_data = [
-    {
-        id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-        title: "First Item",
-    },
-    {
-        id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-        title: "Second Item",
-    },
-    {
-        id: "58694a0f-3da1-471f-bd96-145571e29d72",
-        title: "Third Item",
-    },
-];
-
-const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
-    console.log("wqdmqwmd", user);
+const Item = ({ navigation, restaurant, user, createdAt, caption, postId }) => {
     return (
         <View style={styles.restaurantContainer}>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("Restaurant");
+                    navigation.navigate('Restaurant', {
+                        restaurant,
+                    });
                 }}
-                style={styles.restaurant}>
+                style={styles.restaurant}
+            >
                 <Text style={{ ...styles.restaurantTitle, ...styles.white }}>
                     {restaurant?.title}
                 </Text>
@@ -78,17 +38,15 @@ const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
                 </View>
             </TouchableOpacity>
             <View style={{ width: 400, height: 300 }}>
-                <Image
-                    source={require("../../assets/download.jpeg")}
-                    style={styles.image}
-                />
+                <Image source={require('../../assets/download.jpeg')} style={styles.image} />
             </View>
             <View style={styles.bottomContainer}>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Profile");
+                        navigation.navigate('Profile');
                     }}
-                    style={styles.accountContainer}>
+                    style={styles.accountContainer}
+                >
                     <ProfilePicture />
                     <View style={styles.nameContainer}>
                         <View>
@@ -99,13 +57,15 @@ const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Entry", {
+                        navigation.navigate('Entry', {
                             restaurant,
                             user,
                             createdAt,
                             caption,
+                            postId,
                         });
-                    }}>
+                    }}
+                >
                     <Text style={styles.white}>{caption}</Text>
                     <Text style={styles.comment}>Add a comment...</Text>
                 </TouchableOpacity>
@@ -116,14 +76,15 @@ const Item = ({ navigation, restaurant, user, createdAt, caption }) => {
 
 const Feed = ({ navigation }) => {
     const contextValue = useContext(UserContext);
-    const [friendsPost, getFriendsPost] = useState({});
+    const [friendsPost, setFriendsPost] = useState({});
+    const [cravings, setCravings] = useState({});
 
-    console.log("YOYOYOYO", friendsPost.data);
+    console.log("cravings data", cravings?.data);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`${link}/getFriendsPosts`, {
+                const response = await fetch(`${link}/getFriendsCraving`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -134,7 +95,30 @@ const Feed = ({ navigation }) => {
                 if (data.statusCode !== 200) {
                     throw { name: data };
                 } else {
-                    getFriendsPost(data);
+                    setCravings(data);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [contextValue]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${link}/getFriendsPosts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        access_token: contextValue,
+                    },
+                });
+                const data = await response.json();
+                if (data.statusCode !== 200) {
+                    throw { name: data };
+                } else {
+                    setFriendsPost(data);
                 }
             } catch (error) {
                 console.log(error);
@@ -150,28 +134,35 @@ const Feed = ({ navigation }) => {
                     What your friends have been craving
                 </Text>
                 <FlatList
-                    data={craving_data}
+                    data={cravings?.data}
                     renderItem={({ item }) => (
-                        <CravingItem restaurant={item.restaurant} />
+                        <CravingItem
+                            navigation={navigation}
+                            restaurant={item.Restaurant}
+                            id={item.id}
+                        />
                     )}
                     keyExtractor={(item) => item.id}
                     horizontal={true}
                     style={styles.cravingContainer}
                 />
-                <FlatList
-                    data={friendsPost?.data}
-                    renderItem={({ item }) => (
-                        <Item
-                            navigation={navigation}
-                            title={item.title}
-                            restaurant={item.Restaurant}
-                            user={item.User}
-                            createdAt={item.createdAt}
-                            caption={item.caption}
-                        />
-                    )}
-                    keyExtractor={(item) => item.id}
-                />
+                <View style={{ marginRight: 15 }}>
+                    <FlatList
+                        data={friendsPost?.data}
+                        renderItem={({ item }) => (
+                            <Item
+                                navigation={navigation}
+                                title={item.title}
+                                restaurant={item.Restaurant}
+                                user={item.User}
+                                createdAt={item.createdAt}
+                                caption={item.caption}
+                                postId={item.id}
+                            />
+                        )}
+                        keyExtractor={(item) => item.id}
+                    />
+                </View>
                 <View style={{ width: "100%", height: 150 }} />
             </ScrollView>
         </View>
@@ -180,8 +171,8 @@ const Feed = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: background,
         flex: 1,
     },
@@ -196,7 +187,6 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         marginLeft: 15,
-        marginRight: 15,
     },
     restaurantContainer: {
         backgroundColor: black,
@@ -207,7 +197,7 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     restaurantTitle: {
-        fontFamily: "Lora_700Bold",
+        fontFamily: 'Lora_700Bold',
         fontSize: 22,
     },
     location: {
@@ -215,13 +205,13 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     topRowContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     ratingText: {
         marginLeft: 5,
@@ -230,14 +220,14 @@ const styles = StyleSheet.create({
     image: {
         width: 400,
         height: 300,
-        resizeMode: "cover",
+        resizeMode: 'cover',
     },
     bottomContainer: {
         margin: 20,
     },
     accountContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 10,
     },
     ratingBar: {
@@ -251,7 +241,7 @@ const styles = StyleSheet.create({
         color: gray_text,
     },
     cravingText: {
-        fontFamily: "Lora_600SemiBold",
+        fontFamily: 'Lora_600SemiBold',
         fontSize: 18,
         marginTop: 20,
     },

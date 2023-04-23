@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+    TextInput,
+} from "react-native";
 import { Image } from "react-native-elements";
 import {
     background,
@@ -13,7 +20,10 @@ import StarRating from "../components/StarRating";
 import Line from "../components/Line";
 import ProfilePicture from "../components/ProfilePicture";
 import BackButton from "../components/BackButton";
-import { convertDate } from "../components/Helper";
+import { convertDate, convertTimeTo12HourFormat } from "../components/Helper";
+import { useContext, useEffect, useState } from "react";
+import UserContext from "../contexts/UserContext";
+import { link } from "../api/link";
 
 const persons = [
     {
@@ -43,14 +53,64 @@ const persons = [
 ];
 
 const Entry = ({ navigation, route }) => {
-    const { restaurant, user, createdAt, caption } = route.params;
+    const contextValue = useContext(UserContext);
+    const { restaurant, user, createdAt, caption, postId } = route.params;
+
+    const [comments, setComments] = useState({});
+    const [newComment, setNewComment] = useState("");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${link}/getComment`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        access_token: contextValue,
+                    },
+                    body: JSON.stringify({ PostId: postId }),
+                });
+                const data = await response.json();
+                if (data.statusCode !== 200) {
+                    throw { name: data };
+                } else {
+                    setComments(data);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [contextValue]);
+
+    const handleInputSubmit = async () => {
+        try {
+            const response = await fetch(`${link}/postComment`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    access_token: contextValue,
+                },
+                body: JSON.stringify({ PostId: postId, comment: newComment }),
+            });
+            const data = await response.json();
+            if (data.statusCode !== 200) {
+                throw { name: data };
+            } else {
+                setNewComment("");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <>
             <SafeAreaView style={styles.mainContainer}>
+                <View style={styles.backContainer}>
+                    <BackButton navigation={navigation} marginLeft={30} />
+                </View>
                 <ScrollView>
-                    <View style={styles.backContainer}>
-                        <BackButton navigation={navigation} marginLeft={30} />
-                    </View>
                     <View style={styles.subContainer}>
                         <View style={styles.topRowContainer}>
                             <ProfilePicture width={80} height={80} />
@@ -87,9 +147,12 @@ const Entry = ({ navigation, route }) => {
                     </View>
                     <View style={styles.commentContainer}>
                         <View>
-                            {persons.map((person) => {
+                            {comments?.data?.map((comment, i) => {
+                                console.log("dasda", comment);
                                 return (
-                                    <View style={styles.accountContainer}>
+                                    <View
+                                        key={i}
+                                        style={styles.accountContainer}>
                                         <ProfilePicture />
                                         <View
                                             style={
@@ -101,18 +164,22 @@ const Entry = ({ navigation, route }) => {
                                                         style={
                                                             styles.accountName
                                                         }>
-                                                        {person.name}
+                                                        nama orang
                                                     </Text>
                                                     <Text
                                                         style={
                                                             styles.gray_text
                                                         }>
-                                                        Today, 10:11 AM
+                                                        {convertDate(createdAt)}
+                                                        ,{" "}
+                                                        {convertTimeTo12HourFormat(
+                                                            createdAt
+                                                        )}
                                                     </Text>
                                                 </View>
 
                                                 <Text style={styles.white}>
-                                                    omg it looks so good
+                                                    {comment?.comment}
                                                 </Text>
                                             </View>
                                         </View>
@@ -122,6 +189,19 @@ const Entry = ({ navigation, route }) => {
                         </View>
                     </View>
                 </ScrollView>
+                <View style={styles.inputBottom}>
+                    <View style={styles.inputContainerStyle}>
+                        <TextInput
+                            placeholder="Add a comment..."
+                            placeholderTextColor={gray}
+                            style={styles.white}
+                            value={newComment}
+                            onChangeText={setNewComment}
+                            returnKeyType="done"
+                            onSubmitEditing={handleInputSubmit}
+                        />
+                    </View>
+                </View>
             </SafeAreaView>
         </>
     );
@@ -201,10 +281,12 @@ const styles = StyleSheet.create({
     light_gray: {
         color: light_gray,
     },
+    inputBottom: {
+        marginHorizontal: 30,
+    },
     inputContainerStyle: {
         fontSize: 16,
-        paddingTop: 7,
-        paddingBottom: 10,
+        paddingTop: 15,
         paddingHorizontal: 15,
         backgroundColor: black,
         borderRadius: 5,
@@ -212,7 +294,7 @@ const styles = StyleSheet.create({
         borderColor: gray,
         color: pure_white,
         borderRadius: 10,
-        height: 120,
+        height: 50,
     },
     bottomCommentContainer: {
         marginLeft: 15,
