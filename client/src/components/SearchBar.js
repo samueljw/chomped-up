@@ -1,5 +1,12 @@
 import React, { useState, useRef, useContext } from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity, Image, Text} from "react-native";
+import {
+    View,
+    TextInput,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+    Text,
+} from "react-native";
 import {
     background,
     black,
@@ -8,7 +15,7 @@ import {
     pure_white,
 } from "../../assets/colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import {API_ENDPOINT} from "@env"
+import { link } from "../api/link";
 import UserContext from "../contexts/UserContext";
 
 const SearchBar = () => {
@@ -20,21 +27,21 @@ const SearchBar = () => {
 
     const handleSearch = async () => {
         try {
-            const response = await fetch(
-                `${API_ENDPOINT}/getAllResto`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        access_token: token,
-                    },
-                });
+            const response = await fetch(`${link}/getAllResto`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    access_token: token,
+                },
+            });
             const data = await response.json();
-            console.log(data.data)
+            console.log(data);
             setSearchResults(data.data);
         } catch (error) {
             console.error(error);
-          }
+        }
+
+        return <searchResult searchResults={searchResults} />;
     };
 
     const handleIconPress = () => {
@@ -65,12 +72,18 @@ const SearchBar = () => {
                     size={23}
                 />
             </TouchableOpacity>
-            {/* {searchResults.map((item, index) => (
-                <View key={index}>
-                    <Image source={{ uri: item.photo }} style={{ width: 200, height: 200 }} />
-                    <Text>{item.title}</Text>
-              </View>
-            ))}    */}
+            {searchResults.map((item, index) => (
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate("Restaurant");
+                    }}
+                    style={styles.restaurantContainer}>
+                    <Image source={{ uri: item.photo }} style={styles.image} />
+                    <View style={styles.imageText}>
+                        <Text style={styles.names}>{item.title}</Text>
+                    </View>
+                </TouchableOpacity>
+            ))}
         </View>
     );
 };
@@ -99,6 +112,25 @@ const styles = StyleSheet.create({
     },
     inputFocused: {
         borderColor: primary, // Set border color to primary color when focused
+    },
+    image: {
+        width: "100%",
+        height: 200,
+        resizeMode: "cover",
+        borderRadius: 20,
+    },
+    restaurantContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    imageText: {
+        position: "absolute",
+        margin: 10,
+        bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    names: {
+        color: "#fff",
     },
 });
 

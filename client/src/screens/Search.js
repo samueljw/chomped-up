@@ -18,6 +18,8 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import SearchBar from "../components/SearchBar";
 import { SafeAreaView } from "react-native-safe-area-context";
+import UserContext from "../contexts/UserContext";
+import { useContext, useRef } from "react";
 
 const dummy_data = [
     {
@@ -47,7 +49,7 @@ const Item = ({ navigation }) => (
         <View style={styles.imageText}>
             <Text>Sun Nong Dan</Text>
             <Text>4.3</Text>
-            <Text>15 friends ate here recently</Text>
+            <Text>15 friends ate here</Text>
         </View>
     </TouchableOpacity>
 );
