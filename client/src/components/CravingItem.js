@@ -9,12 +9,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 import { white } from "../../assets/colors";
-import { useContext, useEffect, useState } from "react";
-import UserContext from "../contexts/UserContext";
 
 const CravingItem = ({ navigation, restaurant, id }) => {
-    console.log("user id", id);
-
     return (
         <TouchableOpacity
             onPress={() => navigation.navigate("Profile", { id })}
